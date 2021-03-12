@@ -1,7 +1,9 @@
 
 def romanNumeralFromValue(value):
     outputNumeral = ""
-    if value == 20:
+    if value == 30:
+        return "XXX"
+    elif value == 20:
         return "XX"
     elif value == 10:
         return "X"
