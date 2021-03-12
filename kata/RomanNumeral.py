@@ -1,4 +1,4 @@
-def romanNumeralFromValue(value):
+def fromValue(value):
     outputNumeral = ""
     while value >= 1000:
         outputNumeral += "M"
