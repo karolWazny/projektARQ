@@ -9,6 +9,9 @@ def fromValue(value):
     while value >= 10:
         outputNumeral += "X"
         value -= 10
+    while value >= 5:
+        outputNumeral += "V"
+        value -= 5
     while value >= 1:
         outputNumeral += "I"
         value -= 1
