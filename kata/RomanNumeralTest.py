@@ -62,5 +62,14 @@ class RomanNumeralFromValueTest(unittest.TestCase):
 
     def test_nine_hundred(self):
         self.assertEqual("CM", RomanNumeral.fromValue(900))
+
+    def test_four_hundred(self):
+        self.assertEqual("CD", RomanNumeral.fromValue(400))
+
+    def test_ninety(self):
+        self.assertEqual("XC", RomanNumeral.fromValue(90))
+
+    def test_forty(self):
+        self.assertEqual("XL", RomanNumeral.fromValue(40))
 if __name__ == '__main__':
     unittest.main()
