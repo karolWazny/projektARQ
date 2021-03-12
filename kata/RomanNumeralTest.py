@@ -56,5 +56,11 @@ class RomanNumeralFromValueTest(unittest.TestCase):
 
     def test_nine(self):
         self.assertEqual("IX", RomanNumeral.fromValue(9))
+
+    def test_nineteen(self):
+        self.assertEqual("XIX", RomanNumeral.fromValue(19))
+
+    def test_nine_hundred(self):
+        self.assertEqual("CM", RomanNumeral.fromValue(900))
 if __name__ == '__main__':
     unittest.main()
