@@ -50,5 +50,8 @@ class RomanNumeralFromValueTest(unittest.TestCase):
 
     def test_five_hundred(self):
         self.assertEqual("D", RomanNumeral.fromValue(500))
+
+    def test_four(self):
+        self.assertEqual("IV", RomanNumeral.fromValue(4))
 if __name__ == '__main__':
     unittest.main()
