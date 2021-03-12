@@ -23,5 +23,8 @@ class RomanNumeralFromValueTest(unittest.TestCase):
 
     def test_hundred(self):
         self.assertEqual("C", ValueToRoman.romanNumeralFromValue(100))
+
+    def test_two_hundred(self):
+        self.assertEqual("CC", ValueToRoman.romanNumeralFromValue(200))
 if __name__ == '__main__':
     unittest.main()
