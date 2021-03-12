@@ -1,30 +1,18 @@
+valueToRomanMappings = {"M" : 1000,
+                        "D" : 500,
+                        "C" : 100,
+                        "L" : 50,
+                        "X" : 10,
+                        "IX" : 9,
+                        "V" : 5,
+                        "IV" : 4,
+                        "I" : 1}
+
+
 def fromValue(value):
     outputNumeral = ""
-    while value >= 1000:
-        outputNumeral += "M"
-        value -= 1000
-    while value >= 500:
-        outputNumeral += "D"
-        value -= 500
-    while value >= 100:
-        outputNumeral += "C"
-        value -= 100
-    while value >= 50:
-        outputNumeral += "L"
-        value -= 50
-    while value >= 10:
-        outputNumeral += "X"
-        value -= 10
-    while value >= 9:
-        outputNumeral += "IX"
-        value -= 9
-    while value >= 5:
-        outputNumeral += "V"
-        value -= 5
-    while value >= 4:
-        outputNumeral += "IV"
-        value -= 4
-    while value >= 1:
-        outputNumeral += "I"
-        value -= 1
+    for romanNumeral, mappedValue in valueToRomanMappings.items():
+        while value >= mappedValue:
+            outputNumeral += romanNumeral
+            value -= mappedValue
     return outputNumeral
