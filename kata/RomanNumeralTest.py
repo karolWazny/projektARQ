@@ -35,5 +35,14 @@ class RomanNumeralFromValueTest(unittest.TestCase):
 
     def test_five(self):
         self.assertEqual("V", RomanNumeral.fromValue(5))
+
+    def test_six(self):
+        self.assertEqual("VI", RomanNumeral.fromValue(6))
+
+    def test_eight(self):
+        self.assertEqual("VIII", RomanNumeral.fromValue(8))
+
+    def test_fifteen(self):
+        self.assertEqual("XV", RomanNumeral.fromValue(15))
 if __name__ == '__main__':
     unittest.main()
