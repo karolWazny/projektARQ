@@ -1,6 +1,8 @@
-
 def romanNumeralFromValue(value):
     outputNumeral = ""
+    while value >= 1000:
+        outputNumeral += "M"
+        value -= 1000
     while value >= 100:
         outputNumeral += "C"
         value -= 100
