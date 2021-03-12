@@ -1,9 +1,7 @@
 
 def romanNumeralFromValue(value):
     outputNumeral = ""
-    if value == 200:
-        return "CC"
-    elif value >= 100:
+    while value >= 100:
         outputNumeral += "C"
         value -= 100
     while value >= 10:
