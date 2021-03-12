@@ -3,6 +3,9 @@ def fromValue(value):
     while value >= 1000:
         outputNumeral += "M"
         value -= 1000
+    while value >= 500:
+        outputNumeral += "D"
+        value -= 500
     while value >= 100:
         outputNumeral += "C"
         value -= 100
