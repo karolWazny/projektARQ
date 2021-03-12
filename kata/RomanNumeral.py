@@ -6,6 +6,9 @@ def fromValue(value):
     while value >= 100:
         outputNumeral += "C"
         value -= 100
+    while value >= 50:
+        outputNumeral += "L"
+        value -= 50
     while value >= 10:
         outputNumeral += "X"
         value -= 10
