@@ -14,5 +14,9 @@ class RomanNumeralFromValueTest(unittest.TestCase):
 
     def test_ten(self):
         self.assertEqual("X", ValueToRoman.romanNumeralFromValue(10))
+
+    def test_twenty(self):
+        self.assertEqual("XX", ValueToRoman.romanNumeralFromValue(20))
+
 if __name__ == '__main__':
     unittest.main()
