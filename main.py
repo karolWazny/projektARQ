@@ -9,8 +9,13 @@ def print_hi(funnyName):
     print(f'Kłaniam się, {funnyName}')  # Press Ctrl+F8 to toggle the breakpoint. <3
 
 
+def repo(y):
+    print("repo " + y + " a little bit")
+
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print_hi('Buddy')
+    repo('sucks')
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
