@@ -13,9 +13,7 @@ class Packet:
 # ################## test ########################################
 x = Packet(8)
 for y in range(111):
-    if x.addBit(1) != -1:
-        pass
-    else:
+    if x.addBit(1) == -1:
         print(x.bitList)
         # send(x.bitList)
         x = Packet(8)
