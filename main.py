@@ -4,14 +4,18 @@
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 
-def print_hi(name):
+def print_hi(funnyName):
     # Use a breakpoint in the code line below to debug your script.
-    print(f'Km się, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+    print(f'Kłaniam się, {funnyName}')  # Press Ctrl+F8 to toggle the breakpoint. <3
+
+
+def repo(y):
+    print("repo " + y + " a little bit")
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('BuddyGuy')
-    print_hi('hehe')
+    print_hi('Buddy')
+    repo('sucks')
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
