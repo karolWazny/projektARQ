@@ -1,5 +1,5 @@
-import Random
-from Packet import Packet
+from .Random import *
+from .Packet import Packet
 
 
 class Distortion:
@@ -8,18 +8,21 @@ class Distortion:
 
 
 class SimpleDistortion(Distortion):
-    def __init__(self, randomDevice=Random.RandomizerImpl):
-        self.randomizer = randomDevice
-        self.distortionProbabilityInPercent = 10
+    def __init__(self, randomDevice=RandomizerImpl()):
+        self.__randomizer = randomDevice
+        self.__distortionProbabilityInPercent = 10
 
     def distort(self, packet):
-        output = Packet(length=packet.length)
+        output = Packet()
         for bit in packet.bits:
             output.addBit(bit=bool(bit) ^ bool(self.isBitDistorted()))
         return output
 
     def isBitDistorted(self):
-        return self.randomizer.getBooleanWithProbability(percent=self.distortionProbabilityInPercent)
+        return self.__randomizer.getBooleanWithProbability(percent=self.__distortionProbabilityInPercent)
 
     def setRandomizer(self, randDevice):
-        self.randomizer = randDevice
+        self.__randomizer = randDevice
+
+    def setChancesOfDistortingSingleBit(self, percentChance):
+        self.__distortionProbabilityInPercent = percentChance
