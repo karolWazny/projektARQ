@@ -1,5 +1,5 @@
 import unittest
-from ..system.SimpleDistortion import *
+from ..system.Distortion import *
 
 
 class MyTestCase(unittest.TestCase):
