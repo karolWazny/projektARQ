@@ -17,10 +17,10 @@ class DecoderTest(unittest.TestCase):
     def test_evenDecoderCorrectPacketNoThrow(self):
         packet = Packet()
         decoder = EvenDecoder()
-        packet.addBit(True)
-        packet.addBit(True)
-        packet.addBit(False)
-        packet.addBit(False)
+        packet.add(True)
+        packet.add(True)
+        packet.add(False)
+        packet.add(False)
         decoder.passFrame(packet)
         decoded = None
         try:
@@ -31,10 +31,10 @@ class DecoderTest(unittest.TestCase):
     def test_evenDecoderIncorrectPacketThrows(self):
         packet = Packet()
         decoder = EvenDecoder()
-        packet.addBit(True)
-        packet.addBit(True)
-        packet.addBit(True)
-        packet.addBit(False)
+        packet.add(True)
+        packet.add(True)
+        packet.add(True)
+        packet.add(False)
         decoder.passFrame(packet)
         decoded = None
         try:
