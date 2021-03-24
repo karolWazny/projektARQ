@@ -9,7 +9,7 @@ class DistortionTest(unittest.TestCase):
         rand = RandomizerImpl()
         self.packet = Packet()
         for index in range(0, 100):
-            self.packet.addBit(rand.getBooleanWithProbability())
+            self.packet.add(rand.getBooleanWithProbability())
 
     def test_DefaultDistortion(self):
         dist = Distortion()
@@ -21,7 +21,7 @@ class DistortionTest(unittest.TestCase):
         distorted = dist.distort(self.packet)
         self.assertEqual(distorted.length(), self.packet.length())
         for index in range(0, self.packet.length()):
-            self.assertNotEqual(distorted.bits[index], self.packet.bits[index])
+            self.assertNotEqual(distorted.packet[index], self.packet.packet[index])
 
     def test_simpleDistortionNoBitIsChangedFalse(self):
         dist = SimpleDistortion()
@@ -29,4 +29,4 @@ class DistortionTest(unittest.TestCase):
         distorted = dist.distort(self.packet)
         self.assertEqual(distorted.length(), self.packet.length())
         for index in range(0, self.packet.length()):
-            self.assertEqual(distorted.bits[index], self.packet.bits[index])
+            self.assertEqual(distorted.packet[index], self.packet.packet[index])

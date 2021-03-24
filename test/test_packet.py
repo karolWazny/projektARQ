@@ -7,7 +7,7 @@ class PacketTest(unittest.TestCase):
     def test_length(self):
         packet = Packet()
         self.assertEqual(packet.length(), 0)
-        packet.addBit(True)
+        packet.add(True)
         self.assertEqual(packet.length(), 1)
-        packet.addBit(False)
+        packet.add(False)
         self.assertEqual(packet.length(), 2)
