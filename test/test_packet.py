@@ -11,3 +11,7 @@ class PacketTest(unittest.TestCase):
         self.assertEqual(packet.length(), 1)
         packet.add(False)
         self.assertEqual(packet.length(), 2)
+
+
+if __name__ == '__main__':
+    unittest.main()

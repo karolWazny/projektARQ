@@ -30,3 +30,7 @@ class DistortionTest(unittest.TestCase):
         self.assertEqual(distorted.length(), self.packet.length())
         for index in range(0, self.packet.length()):
             self.assertEqual(distorted.read()[index], self.packet.read()[index])
+
+
+if __name__ == '__main__':
+    unittest.main()
