@@ -14,7 +14,10 @@ class Decoder:
 
 class EvenDecoder(Decoder):
     def decode(self):
+        if self.currentFrame.length() == 0:
+            raise DecoderException
         return self.currentFrame
+
 
 
 class DecoderException(Exception):
