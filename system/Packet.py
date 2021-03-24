@@ -8,5 +8,5 @@ class Packet:
     def length(self):
         return len(self.__packet)
 
-    def read(self):
+    def content(self):
         return self.__packet

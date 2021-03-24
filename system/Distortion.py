@@ -14,7 +14,7 @@ class SimpleDistortion(Distortion):
 
     def distort(self, packet):
         output = Packet()
-        for bit in packet.read():
+        for bit in packet.content():
             output.add(bit=bool(bit) ^ bool(self.isBitDistorted()))
         return output
 
