@@ -14,15 +14,28 @@ class Decoder:
 
 class EvenDecoder(Decoder):
     def decode(self):
-        if self.currentFrame.length() == 0:
+        self.checkForError()
+        return self.makeOutput()
+
+    def checkForError(self):
+        if self.isOdd() or self.isEmpty():
             raise DecoderException
-        isOdd = False
+
+    def makeOutput(self):
         output = Packet()
         for bit in self.currentFrame.read():
+            output.add(bit)
+        output.read().pop(-1)
+        return output
+
+    def isEmpty(self):
+        return self.currentFrame.length() == 0
+
+    def isOdd(self):
+        isOdd = False
+        for bit in self.currentFrame.read():
             isOdd = bool(isOdd) ^ bool(bit)
-        if isOdd:
-            raise DecoderException
-        return self.currentFrame
+        return isOdd
 
 
 class DecoderException(Exception):

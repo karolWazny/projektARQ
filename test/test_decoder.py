@@ -44,6 +44,28 @@ class DecoderTest(unittest.TestCase):
         else:
             self.fail(msg="Nieprawidłowy pakiet powinien rzucać wyjątek.")
 
+    def test_evenDecoderDecodesPackage(self):
+        packet = Packet()
+        decoder = EvenDecoder()
+        packet.add(True)
+        packet.add(True)
+        packet.add(True)
+        packet.add(False)
+        packet.add(True)
+        decoder.passFrame(packet)
+        decoded = None
+        decodedReference = Packet()
+        decodedReference.add(True)
+        decodedReference.add(True)
+        decodedReference.add(True)
+        decodedReference.add(False)
+        try:
+            decoded = decoder.decode()
+        except DecoderException:
+            self.fail(msg="Prawidłowy pakiet nie powinien rzucać wyjątku")
+        else:
+            self.assertEqual(decoded.length(), decodedReference.length())
+            self.assertEqual(decoded.read(), decodedReference.read())
 
 if __name__ == '__main__':
     unittest.main()
