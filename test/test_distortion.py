@@ -21,7 +21,7 @@ class DistortionTest(unittest.TestCase):
         distorted = dist.distort(self.packet)
         self.assertEqual(distorted.length(), self.packet.length())
         for index in range(0, self.packet.length()):
-            self.assertNotEqual(distorted.packet[index], self.packet.packet[index])
+            self.assertNotEqual(distorted.read()[index], self.packet.read()[index])
 
     def test_simpleDistortionNoBitIsChangedFalse(self):
         dist = SimpleDistortion()
@@ -29,4 +29,8 @@ class DistortionTest(unittest.TestCase):
         distorted = dist.distort(self.packet)
         self.assertEqual(distorted.length(), self.packet.length())
         for index in range(0, self.packet.length()):
-            self.assertEqual(distorted.packet[index], self.packet.packet[index])
+            self.assertEqual(distorted.read()[index], self.packet.read()[index])
+
+
+if __name__ == '__main__':
+    unittest.main()
