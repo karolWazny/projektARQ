@@ -23,9 +23,9 @@ class EvenDecoder(Decoder):
 
     def makeOutput(self):
         output = Packet()
-        for bit in self.currentFrame.read():
+        for bit in self.currentFrame.content():
             output.add(bit)
-        output.read().pop(-1)
+        output.content().pop(-1)
         return output
 
     def isEmpty(self):
@@ -33,7 +33,7 @@ class EvenDecoder(Decoder):
 
     def isOdd(self):
         isOdd = False
-        for bit in self.currentFrame.read():
+        for bit in self.currentFrame.content():
             isOdd = bool(isOdd) ^ bool(bit)
         return isOdd
 

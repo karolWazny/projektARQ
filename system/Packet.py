@@ -1,12 +1,12 @@
 class Packet:
     def __init__(self):
-        self.__packet = []
+        self.__content = []
 
     def add(self, bit):
-        self.__packet.append(bit)
+        self.__content.append(bit)
 
     def length(self):
-        return len(self.__packet)
+        return len(self.__content)
 
-    def read(self):
-        return self.__packet
+    def content(self):
+        return self.__content

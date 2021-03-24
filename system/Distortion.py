@@ -14,12 +14,12 @@ class SimpleDistortion(Distortion):
 
     def distort(self, packet):
         output = Packet()
-        for bit in packet.read():
+        for bit in packet.content():
             output.add(bit=bool(bit) ^ bool(self.isBitDistorted()))
         return output
 
     def isBitDistorted(self):
-        return self.__randomizer.getBooleanWithProbability(percent=self.__distortionProbabilityInPercent)
+        return self.__randomizer.getTrueWithProbability(percent=self.__distortionProbabilityInPercent)
 
     def setRandomizer(self, randDevice):
         self.__randomizer = randDevice

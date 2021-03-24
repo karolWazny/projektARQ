@@ -65,7 +65,7 @@ class DecoderTest(unittest.TestCase):
             self.fail(msg="Prawidłowy pakiet nie powinien rzucać wyjątku")
         else:
             self.assertEqual(decoded.length(), decodedReference.length())
-            self.assertEqual(decoded.read(), decodedReference.read())
+            self.assertEqual(decoded.content(), decodedReference.content())
 
 if __name__ == '__main__':
     unittest.main()
