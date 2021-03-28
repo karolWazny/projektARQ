@@ -9,7 +9,7 @@ class DistortionTest(unittest.TestCase):
         rand = RandomizerImpl()
         self.packet = Packet()
         for index in range(0, 100):
-            self.packet.add(rand.getBooleanWithProbability())
+            self.packet.add(rand.getTrueWithProbability())
 
     def test_DefaultDistortion(self):
         dist = Distortion()

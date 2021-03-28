@@ -19,7 +19,7 @@ class SimpleDistortion(Distortion):
         return output
 
     def isBitDistorted(self):
-        return self.__randomizer.getBooleanWithProbability(percent=self.__distortionProbabilityInPercent)
+        return self.__randomizer.getTrueWithProbability(percent=self.__distortionProbabilityInPercent)
 
     def setRandomizer(self, randDevice):
         self.__randomizer = randDevice
