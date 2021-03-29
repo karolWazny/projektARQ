@@ -1,1 +1,6 @@
-{"totalLength": null, "packetLength": 5, "noiseModel": null, "encoding": null}
+{
+    "totalLength": null,
+    "packetLength": 6,
+    "noiseModel": null,
+    "encoding": null
+}
