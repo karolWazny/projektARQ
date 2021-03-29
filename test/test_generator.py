@@ -4,7 +4,7 @@ from ..system.Generator import Generator
 
 
 class GeneratorTest(unittest.TestCase):
-    def test_generatingLength(self):
+    def test_generating(self):
         generator = Generator()
-        signal = generator.generate(2)
-        self.assertEqual(len(signal), 2)
+        signal = generator.generate(10)
+        self.assertEqual(len(signal), 10)
