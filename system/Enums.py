@@ -6,3 +6,9 @@ from enum import Enum, unique, auto
 class Encoding(Enum):
     PARITY = auto()
     ODDITY = auto()
+
+
+@unique
+class Noise(Enum):
+    SIMPLE = auto()
+
