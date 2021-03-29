@@ -7,4 +7,3 @@ class Generator:
         for x in range(length):
             signal.append(random.randint(0, 1))
         return signal
-# ewntualnie bez klasy, sama funkcja jak IDE podpowiada
