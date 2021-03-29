@@ -2,7 +2,7 @@ class Transmitter:
     def __init__(self, packetSize, word, packet):
         self.packetSize = packetSize
         self.word = word
-        self.packet = []
+        self.packet = []   # zauważyłem, że tu chyba powinno byc self.packet = packet; potwierdzcie/zmiencie
 
 
 def divBitString(word, packet, packetSize):
