@@ -1,8 +1,8 @@
 class Transmitter:
     def __init__(self, packetSize, word,packet):
-        self.packetSize=packetSize
-        self.word=word
-        self.packet=packet
+        self.packetSize = packetSize
+        self.word = word
+        self.packet = packet
 
     def divBitString(word, packet, packetSize):
         lengthWord=(len(word))
