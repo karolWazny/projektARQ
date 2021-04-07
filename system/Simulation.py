@@ -19,4 +19,6 @@ class Simulation:
             self.decoder.passFrame(distortedPacket)
             decodedPacket = self.decoder.decode() #nie rozumiem w pełni decodera
             receivedData = self.receiver #tu też nie do końca wiem jak to użyć
-            return  #musimy uzgodnić co zwracamy
+            return  #musimy uzgodnić co zwracamy (liczba transmisji, liczba retransmisji, pakiety uszkodzone(?) )
+
+
