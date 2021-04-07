@@ -11,8 +11,4 @@ class AbstractFactory:
         distortion = Distortion()
         decoder = Decoder()
         receiver = Receiver()
-<<<<<<< HEAD
         return generator, transmitter, distortion, decoder, receiver
-=======
-        return generator, transmitter, distortion, decoder, receiver
->>>>>>> origin/master
