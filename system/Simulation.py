@@ -1,5 +1,5 @@
 class Simulation:
-    def __init__(self, signalLength, packetLength, generator, transmitter, distortion, decoder, receiver):
+    def __init__(self, signalLength, packetLength, noiseModel, codingModel, generator, transmitter, distortion, decoder, receiver):
         self.signalLength = signalLength
         self.packetLength = packetLength
         self.generator = generator
@@ -7,6 +7,8 @@ class Simulation:
         self.distortion = distortion
         self.decoder = decoder
         self.receiver = receiver
+        self.noiseModel = noiseModel
+        self.codingModel = codingModel
 
     def simulate(self):
         signal = self.generator.generate(self.signalLength)
