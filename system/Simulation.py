@@ -17,7 +17,7 @@ class Simulation:
         for x in codedPackets:
             distortedPacket = self.distortion.distort(x)
             self.decoder.passFrame(distortedPacket)
-            decodedPacket = self.decoder.decode() #nie rozumiem w pełni decodera
+            decodedPacket = self.decoder.decode()
             receivedData = self.receiver #tu też nie do końca wiem jak to użyć
             return  #musimy uzgodnić co zwracamy (liczba transmisji, liczba retransmisji, pakiety uszkodzone(?) )
 
