@@ -41,7 +41,7 @@ class EvenDecoder(Decoder):
 
 class HammingDecoder(Decoder):
     def __init__(self, matrixBuilder):
-        self.hMatrix = matrixBuilder.buildHMatrix().transpose()
+        self.hTransposedMatrix = matrixBuilder.buildHMatrix().transpose()
         self.k = matrixBuilder.getDataBits()
 
     def decode(self):
@@ -49,14 +49,16 @@ class HammingDecoder(Decoder):
         return self.buildOutput()
 
     def checkForErrors(self):
-        errorMatrix = np.dot(self.currentFrame.content(), self.hMatrix)
+        if self.currentFrame.length() != len(self.hTransposedMatrix):
+            raise DecoderException
+        errorMatrix = np.dot(self.currentFrame.content(), self.hTransposedMatrix)
         for value in errorMatrix:
             value &= 0x1
             if value == 1:
                 raise DecoderException
 
     def buildOutput(self):
-        return Packet.fromList(self.currentFrame.content()[0, self.k])
+        return Packet.fromList(self.currentFrame.content()[0: self.k])
 
 
 class HammingMatrixBuilder:
@@ -89,7 +91,7 @@ class HammingMatrixBuilder:
         return self.__dataBits
 
 if __name__ == '__main__':
-    auto = HammingMatrixBuilder(2)
+    auto = HammingMatrixBuilder(5)
     print(auto.buildHMatrix())
     print(auto.buildGMatrix())
 

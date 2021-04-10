@@ -1,5 +1,6 @@
 import unittest
 from ..system.Decoder import *
+from ..system.Encoder import *
 
 
 class DecoderTest(unittest.TestCase):
@@ -80,6 +81,93 @@ class DecoderTest(unittest.TestCase):
             for value in row:
                 value &= 0x1
                 self.assertEqual(value, 0)
+
+    def test_tripleOneHamming(self):
+        builder = HammingMatrixBuilder(2)
+        enc = HammingEncoder(builder)
+        dec = HammingDecoder(builder)
+
+        packet = Packet.fromList([1])
+
+        encoded = enc.encode(packet)
+        for bit in encoded.content():
+            self.assertEqual(bit, 1)
+        self.assertEqual(encoded.length(), 3)
+
+        dec.passFrame(encoded)
+        decoded = dec.decode()
+
+        for bit in decoded.content():
+            self.assertEqual(bit, 1)
+        self.assertEqual(decoded.length(), 1)
+
+    def test_tripleZeroHamming(self):
+        builder = HammingMatrixBuilder(2)
+        enc = HammingEncoder(builder)
+        dec = HammingDecoder(builder)
+
+        packet = Packet.fromList([0])
+
+        encoded = enc.encode(packet)
+        for bit in encoded.content():
+            self.assertEqual(bit, 0)
+        self.assertEqual(encoded.length(), 3)
+
+        dec.passFrame(encoded)
+        decoded = dec.decode()
+
+        for bit in decoded.content():
+            self.assertEqual(bit, 0)
+        self.assertEqual(decoded.length(), 1)
+
+    def test_hammingTwoParityBitsWrongPacketSize(self):
+        builder = HammingMatrixBuilder(2)
+        dec = HammingDecoder(builder)
+
+        packet = Packet.fromList([1, 1])
+        dec.passFrame(packet)
+        try:
+            dec.decode()
+        except DecoderException:
+            packet.length()
+        else:
+            self.fail()
+
+    def test_hammingTwoParityDamagedPacketRaisesException(self):
+        builder = HammingMatrixBuilder(2)
+        dec = HammingDecoder(builder)
+
+        packet = Packet.fromList([1, 1, 0])
+        dec.passFrame(packet)
+        try:
+            dec.decode()
+        except DecoderException:
+            packet.length()
+        else:
+            self.fail()
+
+    def test_hammingThreeParityDamagedPacketRaisesException(self):
+        builder = HammingMatrixBuilder(3)
+        enc = HammingEncoder(builder)
+        dec = HammingDecoder(builder)
+
+        packet = Packet.fromList([1, 1, 0, 1])
+
+        encoded = enc.encode(packet)
+
+        encoded.content()[5] ^= bool(1)
+
+        dec.passFrame(encoded)
+        try:
+            decoded = dec.decode()
+        except DecoderException:
+            encoded.length()
+        else:
+            self.fail()
+
+
+
+
 
 
 if __name__ == '__main__':
