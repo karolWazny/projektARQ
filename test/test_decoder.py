@@ -67,5 +67,20 @@ class DecoderTest(unittest.TestCase):
             self.assertEqual(decoded.length(), decodedReference.length())
             self.assertEqual(decoded.content(), decodedReference.content())
 
+    def test_hammingMatrixMultipliedGiveZero(self):
+        for index in range(2, 11):
+            self.checkHammingForMEqual(index)
+
+    def checkHammingForMEqual(self, m):
+        builder = HammingMatrixBuilder(m)
+        h = builder.buildHMatrix()
+        g = builder.buildGMatrix().transpose()
+        matrix = h.dot(g)
+        for row in matrix:
+            for value in row:
+                value &= 0x1
+                self.assertEqual(value, 0)
+
+
 if __name__ == '__main__':
     unittest.main()
