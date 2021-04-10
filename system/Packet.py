@@ -10,3 +10,9 @@ class Packet:
 
     def content(self):
         return self.__content
+
+    @staticmethod
+    def fromList(content):
+        output = Packet()
+        output.__content = content
+        return output

@@ -39,9 +39,24 @@ class EvenDecoder(Decoder):
         return isOdd
 
 
-class HammingDecoder(Decoder): #na ten moment tylko Hamming [7,4]
+class HammingDecoder(Decoder):
     def __init__(self, matrixBuilder):
         self.hMatrix = matrixBuilder.buildHMatrix()
+        self.k = matrixBuilder.getK()
+
+    def decode(self):
+        self.checkForErrors()
+        return self.buildOutput()
+
+    def checkForErrors(self):
+        errorMatrix = np.dot(self.currentFrame.content(), self.hMatrix)
+        for value in errorMatrix:
+            value ^= 1
+            if value == 1:
+                raise DecoderException
+
+    def buildOutput(self):
+        return Packet.fromList(self.currentFrame.content()[0, self.k])
 
 
 class HammingMatrixBuilder:
@@ -70,6 +85,9 @@ class HammingMatrixBuilder:
         self.aMatrix = np.flipud(self.aMatrix)
         column = np.full((self.__n - self.__k, 1), 1)
         self.aMatrix = np.append(self.aMatrix, column, axis=1)
+
+    def getK(self):
+        return self.__k
 
 
 
