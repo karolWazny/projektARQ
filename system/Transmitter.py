@@ -4,7 +4,8 @@ class Transmitter:
         self.word = word
         self.packet = packet
 
-    def divBitString(word, packet, packetSize):
+    @staticmethod
+    def divBitString(word,  packet, packetSize):
         lengthWord=(len(word))
         while(len(word)%packetSize!=0):
             word=word+"0"
@@ -15,6 +16,7 @@ class Transmitter:
             counter=counter+1
         return packet
 
+    @staticmethod
     def addBit(packet):
         packet2=[]
         for element in packet:
@@ -29,3 +31,7 @@ class Transmitter:
             packet2.append(element)
         packet=packet2
         return packet
+
+
+    def  endecodeData(self):
+        return self
