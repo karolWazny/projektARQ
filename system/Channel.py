@@ -68,3 +68,9 @@ class ZChannel(StatelessChannel):
             else:
                 output.add(bit)
         return output
+
+
+#https://core.ac.uk/download/pdf/187610741.pdf
+class DefiniteStateMarkovChannel(Channel):
+    def __init__(self):
+        return
