@@ -24,6 +24,7 @@ class StatelessChannel(Channel):
         self.__distortionProbabilityInPercent = percentChance
 
 
+#https://en.wikipedia.org/wiki/Binary_symmetric_channel
 class BinarySymmetricChannel(StatelessChannel):
     """Kanał zaprzeczający dany bit z zadanym prawdopodobieństwem."""
 
@@ -37,6 +38,7 @@ class BinarySymmetricChannel(StatelessChannel):
         return output
 
 
+#https://en.wikipedia.org/wiki/Binary_erasure_channel#Related_channels
 class BinaryErasureChannel(StatelessChannel):
     """Kanał zjadający dany bit z zadanym prawdopodobieństwem."""
 
@@ -51,6 +53,7 @@ class BinaryErasureChannel(StatelessChannel):
         return output
 
 
+#https://en.wikipedia.org/wiki/Z-channel_(information_theory)
 class ZChannel(StatelessChannel):
     """Kanał zmieniający wartość bitu na 0 z zadanym prawdopodobieństwem."""
 
