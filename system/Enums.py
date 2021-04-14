@@ -6,9 +6,11 @@ from enum import Enum, unique, auto
 class Encoding(Enum):
     PARITY = auto()
     ODDITY = auto()
+    HAMMING = auto()
 
 
 @unique
 class Noise(Enum):
-    SIMPLE = auto()
+    BINARY_SYMMETRIC = auto()
+    BINARY_ERASURE = auto()
 
