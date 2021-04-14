@@ -1,5 +1,5 @@
 import unittest
-from ..system.Channel import Channel, BinarySymmetricChannel, BinaryErasureChannel
+from ..system.Channel import Channel, BinarySymmetricChannel, BinaryErasureChannel, ZChannel
 from ..system.Random import Randomizer, RandomizerImpl
 from ..system.Packet import Packet
 
@@ -39,6 +39,22 @@ class ChannelTest(unittest.TestCase):
 
     def test_binaryErasureChannelNoBitIsChangedFalse(self):
         dist = BinaryErasureChannel()
+        dist.setChancesOfDistortingSingleBit(0)
+        distorted = dist.distort(self.packet)
+        self.assertEqual(distorted.length(), self.packet.length())
+        for index in range(0, self.packet.length()):
+            self.assertEqual(distorted.content()[index], self.packet.content()[index])
+
+    def test_zChannelEveryBitIsChangedTrue(self):
+        dist = ZChannel()
+        dist.setChancesOfDistortingSingleBit(100)
+        distorted = dist.distort(self.packet)
+        self.assertEqual(distorted.length(), self.packet.length())
+        for index in range(0, self.packet.length()):
+            self.assertEqual(distorted.content()[index], False)
+
+    def test_zChannelNoBitIsChangedFalse(self):
+        dist = ZChannel()
         dist.setChancesOfDistortingSingleBit(0)
         distorted = dist.distort(self.packet)
         self.assertEqual(distorted.length(), self.packet.length())
