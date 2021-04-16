@@ -2,11 +2,12 @@ from .ParametersAndOutput import *
 
 
 class Simulation:
-    def __init__(self, signalLength, packetLength, noiseModel, codingModel, generator, transmitter, channel, decoder, receiver):
+    def __init__(self, signalLength, packetLength, noiseModel, codingModel, generator, transmitter, encoder, channel, decoder, receiver):
         self.signalLength = signalLength
         self.packetLength = packetLength
         self.generator = generator
         self.transmitter = transmitter
+        self.encoder = encoder
         self.channel = channel
         self.decoder = decoder
         self.receiver = receiver
@@ -28,7 +29,7 @@ class Simulation:
 
         signal = self.generator.generate(self.signalLength)
         packetList = self.transmitter.divBitString(signal, [], self.packetLength) #dzielenie sygnału na listę 8-bitowych pakietów
-        codedPackets = self.transmitter.addBit(packetList)
+        codedPackets = self.encoder.encode(packetList)
         decodedPackets = []
         n = 0
         while n < len(packetList):
