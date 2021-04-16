@@ -2,7 +2,7 @@ from .ParametersAndOutput import *
 
 
 class Simulation:
-    def __init__(self, signalLength, packetLength, noiseModel, codingModel, generator, transmitter, encoder, channel, decoder, receiver):
+    def __init__(self, signalLength, packetLength, generator, transmitter, encoder, channel, decoder, receiver):
         self.signalLength = signalLength
         self.packetLength = packetLength
         self.generator = generator
@@ -11,12 +11,12 @@ class Simulation:
         self.channel = channel
         self.decoder = decoder
         self.receiver = receiver
-        self.noiseModel = noiseModel
         self.codingModel = codingModel
         self.simulationLog = SimulationLog()
-
+# symulacja dostanie params jako obiekt (pozmieniać) i konkretny koder/dekoder ktory bedzie stworzony w SetUp
+# w setup ma być noiseModel i codingModel
     def simulate(self):
-        parameter = SimulationParameters()
+        parameter = SimulationParameters() #tego tu nie bedzie
         parameter.packetLength = self.packetLength
         parameter.noiseModel = self.noiseModel
         parameter.totalLength = self.signalLength
@@ -43,7 +43,7 @@ class Simulation:
             else:
                 decodedPackets.append(decodedPacket)
                 n += 1
-
+# sprawdzic pakiet przed zakodowaniem i odebrany (po zdekodowaniu) czy sa takie same == niewykryte bledy
         if len(packetList) != len(decodedPackets):
             output.errorsUndetected = abs(len(packetList) - len(decodedPackets))
 
