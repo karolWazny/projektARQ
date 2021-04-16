@@ -1,10 +1,15 @@
+import copy
 from .Packet import Packet
 import numpy as np
-
+from Encoder import xor
+from Encoder import mod2div
 
 class Decoder:
     def __init__(self):
         self.currentFrame = None
+        self.receivedData = []
+        self.key = [0]
+        self.retransmission = False
 
     def passFrame(self, packet):
         self.currentFrame = packet
@@ -60,6 +65,24 @@ class HammingDecoder(Decoder):
     def buildOutput(self):
         return Packet.fromList(self.currentFrame.content()[0: self.k])
 
+class CRCDecoder(Decoder):
+    def passFrame(self, packet):
+        for element in packet:
+            isCorrect = True
+            copyFrame = []
+            decode = mod2div(self.receivedData, self.key)
+            checksum = copy.copy(decode)
+            for i in range(len(checksum)):
+                if checksum[i] != 0:
+                    isCorrect = False
+                    break
+            if isCorrect:
+                self.retransmission = True
+            else:
+                self.retransmission = False
+            self.retransmission(packet[element])
+            checksum.clear()
+            decode.clear()
 
 class HammingMatrixBuilder:
     def __init__(self, m=3):

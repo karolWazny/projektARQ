@@ -16,22 +16,6 @@ class Transmitter:
             counter=counter+1
         return packet
 
-    @staticmethod
-    def addBit(packet):
-        packet2=[]
-        for element in packet:
-            counter=0;
-            for bits in element:
-                if(bits=='1'):
-                    counter=counter+1
-            if(counter%2==1):
-                element=element+'1'
-            else:
-                element=element+'0'
-            packet2.append(element)
-        packet=packet2
-        return packet
-
 
     def  endecodeData(self):
         return self
