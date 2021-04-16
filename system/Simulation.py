@@ -29,6 +29,7 @@ class Simulation:
         signal = self.generator.generate(self.signalLength)
         packetList = self.transmitter.divBitString(signal, [], self.packetLength) #dzielenie sygnału na listę 8-bitowych pakietów
         codedPackets = self.transmitter.addBit(packetList)
+        decodedPackets = []
         n = 0
         while n < len(packetList):
             output.transmissionsTotal += 1
@@ -38,9 +39,12 @@ class Simulation:
             decodedPacket = self.decoder.decode()
             if packetList[n] != decodedPacket:
                 output.retransmissions += 1  # simulationLog - zapis ze retransmisja się odbyła (zwiększ licznik retransmisji)
-                output.errorsTotal += 1
             else:
+                decodedPackets.append(decodedPacket)
                 n += 1
+
+        if len(packetList) != len(decodedPackets):
+            output.errorsUndetected = abs(len(packetList) - len(decodedPackets))
 
         self.simulationLog.params = parameter
         self.simulationLog.output = output
