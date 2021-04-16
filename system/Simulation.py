@@ -1,8 +1,5 @@
-from .ParametersAndOutput import *
-
-
 class Simulation:
-    def __init__(self, signalLength, packetLength, generator, transmitter, encoder, channel, decoder, receiver):
+    def __init__(self, signalLength, packetLength, generator, transmitter, encoder, channel, decoder, receiver, params, output):
         self.signalLength = signalLength
         self.packetLength = packetLength
         self.generator = generator
@@ -11,22 +8,10 @@ class Simulation:
         self.channel = channel
         self.decoder = decoder
         self.receiver = receiver
-        self.codingModel = codingModel
         self.simulationLog = SimulationLog()
 # symulacja dostanie params jako obiekt (pozmieniać) i konkretny koder/dekoder ktory bedzie stworzony w SetUp
 # w setup ma być noiseModel i codingModel
     def simulate(self):
-        parameter = SimulationParameters() #tego tu nie bedzie
-        parameter.packetLength = self.packetLength
-        parameter.noiseModel = self.noiseModel
-        parameter.totalLength = self.signalLength
-        parameter.encoding = self.codingModel
-
-        output = SimulationOutput()
-        output.transmissionsTotal = 0
-        output.retransmissions = 0
-        output.errorsTotal = 0
-
         signal = self.generator.generate(self.signalLength)
         packetList = self.transmitter.divBitString(signal, [], self.packetLength) #dzielenie sygnału na listę 8-bitowych pakietów
         codedPackets = self.encoder.encode(packetList)
