@@ -79,25 +79,28 @@ class DefiniteStateMarkovChannel(Channel):
 
 
 class ChannelFactory:
-    def buildChannel(self, channelParameters):
+    def __init__(self, channelParameters):
+        self.parameters = channelParameters
+
+    def buildChannel(self):
         return Channel
 
 
 class BSCFactory(ChannelFactory):
-    def buildChannel(self, channelParameters):
-        channel = BinarySymmetricChannel(BER=channelParameters['BER'])
+    def buildChannel(self):
+        channel = BinarySymmetricChannel(BER=self.parameters['BER'])
         return channel
 
 
 class BECFactory(ChannelFactory):
-    def buildChannel(self, channelParameters):
-        channel = BinaryErasureChannel(BER=channelParameters['BER'])
+    def buildChannel(self):
+        channel = BinaryErasureChannel(BER=self.parameters['BER'])
         return channel
 
 
 class ZChannelFactory(ChannelFactory):
-    def buildChannel(self, channelParameters):
-        channel = ZChannel(BER=channelParameters['BER'])
+    def buildChannel(self):
+        channel = ZChannel(BER=self.parameters['BER'])
         return channel
 
 
@@ -105,10 +108,10 @@ class ChannelFactoryFactory:
     @staticmethod
     def buildFactory(channelParameters):
         if channelParameters['type'] == Noise.BINARY_SYMMETRIC:
-            return BSCFactory()
+            return BSCFactory(channelParameters)
         elif channelParameters['type'] == Noise.BINARY_ERASURE:
-            return BECFactory()
+            return BECFactory(channelParameters)
         elif channelParameters['type'] == Noise.Z_CHANNEL:
-            return ZChannelFactory()
+            return ZChannelFactory(channelParameters)
         else:
             raise Exception()
