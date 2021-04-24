@@ -1,4 +1,6 @@
 from .Packet import Packet
+import numpy
+
 import copy
 #https://www.geeksforgeeks.org/cyclic-redundancy-check-python/
 def xor(a,b):

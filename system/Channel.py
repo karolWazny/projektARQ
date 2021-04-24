@@ -1,5 +1,6 @@
 from .Random import *
 from .Packet import Packet
+from .Enums import Noise
 
 
 class Channel:
@@ -10,9 +11,9 @@ class Channel:
 class StatelessChannel(Channel):
     """Klasa bazowa dla kanałów bezstanowych opartych na losowości."""
 
-    def __init__(self, randomDevice=RandomizerImpl()):
+    def __init__(self, BER, randomDevice):
         self.__randomizer = randomDevice
-        self.__distortionProbabilityInPercent = 10
+        self.__distortionProbabilityInPercent = BER
 
     def isBitDistorted(self):
         return self.__randomizer.getTrueWithProbability(percent=self.__distortionProbabilityInPercent)
@@ -24,12 +25,13 @@ class StatelessChannel(Channel):
         self.__distortionProbabilityInPercent = percentChance
 
 
-#https://en.wikipedia.org/wiki/Binary_symmetric_channel
+# https://en.wikipedia.org/wiki/Binary_symmetric_channel
 class BinarySymmetricChannel(StatelessChannel):
     """Kanał zaprzeczający dany bit z zadanym prawdopodobieństwem."""
 
-    def __init__(self, randomDevice=RandomizerImpl()):
-        super().__init__(randomDevice)
+    def __init__(self, BER=10, randomDevice=RandomizerImpl()):
+        super().__init__(BER, randomDevice)
+        self.setChancesOfDistortingSingleBit(BER)
 
     def distort(self, packet):
         output = Packet()
@@ -38,12 +40,12 @@ class BinarySymmetricChannel(StatelessChannel):
         return output
 
 
-#https://en.wikipedia.org/wiki/Binary_erasure_channel#Related_channels
+# https://en.wikipedia.org/wiki/Binary_erasure_channel#Related_channels
 class BinaryErasureChannel(StatelessChannel):
     """Kanał zjadający dany bit z zadanym prawdopodobieństwem."""
 
-    def __init__(self, randomDevice=RandomizerImpl()):
-        super().__init__(randomDevice)
+    def __init__(self, BER=10, randomDevice=RandomizerImpl()):
+        super().__init__(BER, randomDevice)
 
     def distort(self, packet):
         output = Packet()
@@ -53,12 +55,12 @@ class BinaryErasureChannel(StatelessChannel):
         return output
 
 
-#https://en.wikipedia.org/wiki/Z-channel_(information_theory)
+# https://en.wikipedia.org/wiki/Z-channel_(information_theory)
 class ZChannel(StatelessChannel):
     """Kanał zmieniający wartość bitu na 0 z zadanym prawdopodobieństwem."""
 
-    def __init__(self, randomDevice=RandomizerImpl()):
-        super().__init__(randomDevice)
+    def __init__(self, BER=10, randomDevice=RandomizerImpl()):
+        super().__init__(BER, randomDevice)
 
     def distort(self, packet):
         output = Packet()
@@ -70,7 +72,43 @@ class ZChannel(StatelessChannel):
         return output
 
 
-#https://core.ac.uk/download/pdf/187610741.pdf
+# https://core.ac.uk/download/pdf/187610741.pdf
 class DefiniteStateMarkovChannel(Channel):
     def __init__(self):
         return
+
+
+class ChannelFactory:
+    def buildChannel(self, channelParameters):
+        return Channel
+
+
+class BSCFactory(ChannelFactory):
+    def buildChannel(self, channelParameters):
+        channel = BinarySymmetricChannel(BER=channelParameters['BER'])
+        return channel
+
+
+class BECFactory(ChannelFactory):
+    def buildChannel(self, channelParameters):
+        channel = BinaryErasureChannel(BER=channelParameters['BER'])
+        return channel
+
+
+class ZChannelFactory(ChannelFactory):
+    def buildChannel(self, channelParameters):
+        channel = ZChannel(BER=channelParameters['BER'])
+        return channel
+
+
+class ChannelFactoryFactory:
+    @staticmethod
+    def buildFactory(channelParameters):
+        if channelParameters['type'] == Noise.BINARY_SYMMETRIC:
+            return BSCFactory()
+        elif channelParameters['type'] == Noise.BINARY_ERASURE:
+            return BECFactory()
+        elif channelParameters['type'] == Noise.Z_CHANNEL:
+            return ZChannelFactory()
+        else:
+            raise Exception()

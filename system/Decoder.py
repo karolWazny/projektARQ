@@ -4,6 +4,7 @@ import numpy as np
 from Encoder import xor
 from Encoder import mod2div
 
+
 class Decoder:
     def __init__(self):
         self.currentFrame = None
@@ -46,6 +47,7 @@ class EvenDecoder(Decoder):
 
 class HammingDecoder(Decoder):
     def __init__(self, matrixBuilder):
+        super().__init__()
         self.hTransposedMatrix = matrixBuilder.buildHMatrix().transpose()
         self.k = matrixBuilder.getDataBits()
 
@@ -65,6 +67,7 @@ class HammingDecoder(Decoder):
     def buildOutput(self):
         return Packet.fromList(self.currentFrame.content()[0: self.k])
 
+
 class CRCDecoder(Decoder):
     def passFrame(self, packet):
         for element in packet:
@@ -83,6 +86,7 @@ class CRCDecoder(Decoder):
             self.retransmission(packet[element])
             checksum.clear()
             decode.clear()
+
 
 class HammingMatrixBuilder:
     def __init__(self, m=3):
@@ -113,10 +117,12 @@ class HammingMatrixBuilder:
     def getDataBits(self):
         return self.__dataBits
 
+
 if __name__ == '__main__':
     auto = HammingMatrixBuilder(5)
     print(auto.buildHMatrix())
     print(auto.buildGMatrix())
+
 
 class DecoderException(Exception):
     """Wyjątek zgłaszany jako informacja o błędzie wykrytym w
