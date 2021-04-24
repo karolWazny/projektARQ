@@ -78,6 +78,44 @@ class DefiniteStateMarkovChannel(Channel):
         return
 
 
+class TwoStateMarkovChannel(Channel):
+    def __init__(self, stateOneChannel=BinarySymmetricChannel(10), stateTwoChannel=BinarySymmetricChannel(90)):
+        self.firstChannel = stateOneChannel
+        self.secondChannel = stateTwoChannel
+        self.firstToSecondPercent = 100
+        self.secondToFirstPercent = 100
+        self.randomizer = RandomizerImpl()
+        self.inFirstState = True
+
+    def distort(self, packet):
+        if self.inFirstState:
+            output = self.firstChannel.distort(packet)
+        else:
+            output = self.secondChannel.distort(packet)
+        self.toggleState()
+        return output
+
+    def toggleState(self):
+        if self.inFirstState:
+            isStateChanged = self.randomizer.getTrueWithProbability(self.firstToSecondPercent)
+        else:
+            isStateChanged = self.randomizer.getTrueWithProbability(self.secondToFirstPercent)
+        if isStateChanged:
+            self.inFirstState = not self.inFirstState
+
+    def setFirstStateChannel(self, channel):
+        self.firstChannel = channel
+
+    def setSecondStateChannel(self, channel):
+        self.secondChannel = channel
+
+    def setFirstToSecondProbabilityInPercent(self, percent):
+        self.firstToSecondPercent = percent
+
+    def setSecondToFirstProbability(self, percent):
+        self.secondToFirstPercent = percent
+
+
 class ChannelFactory:
     def __init__(self, channelParameters):
         self.parameters = channelParameters
@@ -104,6 +142,18 @@ class ZChannelFactory(ChannelFactory):
         return channel
 
 
+class TwoStateChannelFactory(ChannelFactory):
+    def buildChannel(self):
+        factory = ChannelFactoryFactory.buildFactory(self.parameters['firstChannel'])
+        firstChanel = factory.buildChannel()
+        factory = ChannelFactoryFactory.buildFactory(self.parameters['secondChannel'])
+        secondChannel = factory.buildChannel()
+        output = TwoStateMarkovChannel(firstChanel, secondChannel)
+        output.setFirstToSecondProbabilityInPercent(self.parameters['firstToSecondProbability'])
+        output.setSecondToFirstProbability(self.parameters['secondToFirstProbability'])
+        return output
+
+
 class ChannelFactoryFactory:
     @staticmethod
     def buildFactory(channelParameters):
@@ -113,5 +163,7 @@ class ChannelFactoryFactory:
             return BECFactory(channelParameters)
         elif channelParameters['type'] == Noise.Z_CHANNEL:
             return ZChannelFactory(channelParameters)
+        elif channelParameters['type'] == Noise.TWO_STATE:
+            return TwoStateChannelFactory(channelParameters)
         else:
             raise Exception()
