@@ -1,7 +1,7 @@
 import copy
 from .Packet import Packet
 import numpy as np
-from Encoder import xor
+from Encoder import xor, HammingEncoder
 from Encoder import mod2div
 
 
@@ -116,6 +116,18 @@ class HammingMatrixBuilder:
 
     def getDataBits(self):
         return self.__dataBits
+
+
+class HammingFactory:
+    def __init__(self, parameters):
+        self.parameters = parameters
+        self.matrixBuilder = HammingMatrixBuilder(parameters['parityBits'])
+
+    def buildEncoder(self):
+        return HammingEncoder(self.matrixBuilder)
+
+    def buildDecoder(self):
+        return HammingDecoder(self.matrixBuilder)
 
 
 if __name__ == '__main__':
