@@ -81,15 +81,20 @@ def saveObjectToJson(objectToSave, fileName):
 
 
 def readParametersFromJson(fileName):
-    dictionary = readFromJson(fileName)
-    output = SimulationParameters.fromDictionary(dictionary)
+    output = readObjectFromJson(SimulationParameters, fileName)
     return output
 
 
 def readLogFromJson(fileName):
-    dictionary = readFromJson(fileName)
-    output = SimulationLog.fromDictionary(dictionary)
+    output = readObjectFromJson(SimulationLog, fileName)
     return output
+
+
+def readObjectFromJson(classToBeRead, fileName):
+    dictionary = readFromJson(fileName)
+    output = classToBeRead.fromDictionary(dictionary)
+    return output
+
 
 def readFromJson(fileName):
     fileName = jsonFileNameFrom(fileName)

@@ -14,3 +14,4 @@ class Noise(Enum):
     BINARY_SYMMETRIC = auto()
     BINARY_ERASURE = auto()
     Z_CHANNEL = auto()
+    TWO_STATE = auto()
