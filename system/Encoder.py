@@ -1,42 +1,37 @@
 from .Packet import Packet
 import copy
-#https://www.geeksforgeeks.org/cyclic-redundancy-check-python/
+def CRCKey(packet, key):
+    for i in range(len(key)-1):
+        packet.append(0)
+    return packet
+
 def xor(a,b):
     result = []
-    for i in range(1, len(b)):
-        if a[i] == b[i]:
-            result.append('0')
-        else:
-            result.append('1')
+    for i in range(len(a)):
+        sum=(a[i]+b[i])%2
+        result.append(sum)
     return result
 
-def mod2div(divident, divisor):
-    divisorLenght = len(divisor)
-    tmp = divident[0:divisorLenght]
-    tmp2 = []
-    for i in range(divisorLenght):
-        tmp2.append(0)
-    while divisorLenght < len(divident):
-        if tmp[0] == 1:
-            tmp3 = tmp
-            tmp = xor(tmp3,divisor)
-            tmp.append(divident[divisorLenght])
-            tmp.append(0)
-            divisorLenght += 1
+def div(divident, divisor):
+    cDivident = 0
+    result = []
+    tmp = []
+    length = len(divisor)
+    cDivident = 0 #counter Divident
+    while(sum(divident[0:(len(divident) - len(divisor) + 1)]) != 0):
+        if(divident[cDivident]!=0):
+
+            tmp = divident[cDivident:(cDivident+length)]
+            result = xor(tmp,divisor)
+            CResult=0 #counter Result
+            while(length>CResult):
+                divident[cDivident+CResult]=result[CResult]
+                CResult += 1
         else:
-            tmp3 = tmp
-            tmp = xor(tmp3,tmp2)
-            tmp.append(divident[divisorLenght])
-            tmp.append(0)
-            divisorLenght += 1
-    if tmp[0] == 1:
-        tmp3 = tmp
-        tmp = xor(tmp3,divisor)
-    else:
-        tmp3 = tmp
-        tmp = xor(tmp3,tmp2)
-    tmp.pop[0]
-    return tmp
+            cDivident += 1
+
+    return divident
+
 
 
 class Encoder:
@@ -62,33 +57,23 @@ class HammingEncoder(Encoder):
         return Packet.fromList(numpy.dot(packet.content(), self.gMatrix))
 
 class ParityEncoder(Encoder):
-        def __init__(self):
-            super().__init__()
+    def __init__(self):
+        super().__init__()
 
-        def encode(self,packet):
-            packet2=[]
-            for element in packet:
-                counter = 0;
-                for bits in element:
-                    if(bits=='1'):
-                        counter += 1
-                if(counter%2==1):
-                    element += '1'
-                else:
-                    element += '0'
-                packet2.append(element)
-            packet = packet2
-            return packet
+    def encode(self,packet):
+        tmp=copy.deepcopy(packet)
+        if sum(tmp)%2 ==0:
+            tmp.append(0)
+        else:
+            tmp.append(1)
+        return tmp
 
 class CRCEncoder(Encoder):
-        def __init__(self):
-            super().__init__()
-        def encoder(self,packet):
-            for element in packet:
-                for i in range(len(self.key)-1):
-                    packet[element].append(0)
+    def __init__(self):
+        super().__init__()
 
-                self.sentData = copy.deepcopy(self.data)
-                self.sentData.extend(mod2div(packet[element], self.key))
-
-            return packet
+    def encode(self,packet,key):
+        tmp = copy.deepcopy(packet)
+        tmp =CRCKey(tmp,key)
+        tmp=div(tmp,key)
+        return tmp
