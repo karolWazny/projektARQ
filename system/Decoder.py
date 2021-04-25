@@ -133,6 +133,17 @@ class HammingMatrixBuilder:
 
     def getDataBits(self):
         return self.__dataBits
+
+class HammingFactory:
+    def __init__(self, parameters):
+        self.parameters = parameters
+        self.matrixBuilder = HammingMatrixBuilder(parameters['parityBits'])
+
+    def buildEncoder(self):
+        return HammingEncoder(self.matrixBuilder)
+
+    def buildDecoder(self):
+        return HammingDecoder(self.matrixBuilder)
 class ParityFactory:
     def __init__(self,parameters):
         self.parameters = parameters

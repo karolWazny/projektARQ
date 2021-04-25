@@ -11,7 +11,7 @@ class Receiver:
         while True:
             try:
                 EvenDecoder.checkForError(self)
-                break
+                return Packet
             except Exception:
                 ParityEncoder.encode(self,packet)
     def decodeCRC(self,packet,key):
@@ -19,17 +19,19 @@ class Receiver:
         while True:
             try:
                 CRCDecoder.checkForError(self)
-                break
+                return packet
             except Exception:
-                CRCEncoder.encode(self,packet,key)
+                packet = None
+                return None
     def decodeHamming(self,packet):
         HammingDecoder.decode(self)
         while True:
             try:
                 HammingDecoder.checkForError(self)
-                break
+                return packet
             except Exception:
-                HammingEncoder.encode(self,packet)
+                packet = None
+                return None
 
 
 
