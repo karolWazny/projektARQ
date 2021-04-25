@@ -1,6 +1,7 @@
 import copy
 from .Packet import Packet
 import numpy as np
+from Encoder import*
 def xor(a,b):
     result = []
     for i in range(len(a)):
@@ -94,6 +95,7 @@ class CRCDecoder(Decoder):
 
     def decode(self):
         self.checkForErrors()
+        return Packet
 
     def checkForErrors(self):
         self.currentFrame = div(self.currentFrame, self.key)
@@ -131,7 +133,25 @@ class HammingMatrixBuilder:
 
     def getDataBits(self):
         return self.__dataBits
+class ParityFactory:
+    def __init__(self,parameters):
+        self.parameters = parameters
 
+    def buildEncoder(self):
+        return ParityEncoder
+
+    def buildDecoder(self):
+        return EvenDecoder
+
+class CRCFactory:
+    def __init__(self,parameters):
+        self.parameters = parameters
+
+    def buildEncoder(self):
+        return CRCEncoder
+
+    def buildDecoder(self):
+        return CRCDecoder
 if __name__ == '__main__':
     auto = HammingMatrixBuilder(5)
     print(auto.buildHMatrix())
