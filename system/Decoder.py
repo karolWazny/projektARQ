@@ -1,14 +1,38 @@
 import copy
-from .Packet import Packet
+from Packet import Packet
 import numpy as np
-from Encoder import xor
-from Encoder import mod2div
+from Encoder import CRCEncoder, ParityEncoder
 
+def xor(a,b):
+    result = []
+    for i in range(len(a)):
+        sum=(a[i]+b[i])%2
+        result.append(sum)
+    return result
+
+def div(divident, divisor):
+    cDivident = 0
+    result = []
+    tmp = []
+    length = len(divisor)
+    cDivident = 0 #counter Divident
+    while(sum(divident[0:(len(divident) - len(divisor) + 1)]) != 0):
+        if(divident[cDivident]!=0):
+
+            tmp = divident[cDivident:(cDivident+length)]
+            result = xor(tmp,divisor)
+            CResult=0 #counter Result
+            while(length>CResult):
+                divident[cDivident+CResult]=result[CResult]
+                CResult += 1
+        else:
+            cDivident += 1
+    return divident
 class Decoder:
     def __init__(self):
         self.currentFrame = None
         self.receivedData = []
-        self.key = [0]
+        self.key = []
         self.retransmission = False
 
     def passFrame(self, packet):
@@ -66,23 +90,19 @@ class HammingDecoder(Decoder):
         return Packet.fromList(self.currentFrame.content()[0: self.k])
 
 class CRCDecoder(Decoder):
-    def passFrame(self, packet):
-        for element in packet:
-            isCorrect = True
-            copyFrame = []
-            decode = mod2div(self.receivedData, self.key)
-            checksum = copy.copy(decode)
-            for i in range(len(checksum)):
-                if checksum[i] != 0:
-                    isCorrect = False
-                    break
-            if isCorrect:
-                self.retransmission = True
-            else:
-                self.retransmission = False
-            self.retransmission(packet[element])
-            checksum.clear()
-            decode.clear()
+
+    def checkForErrors(self,packetCRC,key):
+        packetCRC = div(packetCRC,key)
+        if(sum(packetCRC)==0):
+            pass
+        else:
+            raise DecoderException
+
+    def decode(self,packet,key):
+        packetCRC = copy.deepcopy(packet)
+        self.checkForErrors(self,packetCRC,key)
+        return packetCRC
+
 
 class HammingMatrixBuilder:
     def __init__(self, m=3):
@@ -112,6 +132,26 @@ class HammingMatrixBuilder:
 
     def getDataBits(self):
         return self.__dataBits
+
+class ParityFactory:
+    def __init__(self,parameters):
+        self.parameters = parameters
+
+    def buildEncoder(self):
+        return ParityEncoder
+
+    def buildDecoder(self):
+        return EvenDecoder
+
+class CRCFactory:
+    def __init__(self,parameters):
+        self.parameters = parameters
+
+    def buildEncoder(self):
+        return CRCEncoder
+
+    def buildDecoder(self):
+        return CRCDecoder
 
 if __name__ == '__main__':
     auto = HammingMatrixBuilder(5)

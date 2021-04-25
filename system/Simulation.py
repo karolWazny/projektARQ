@@ -28,7 +28,7 @@ class Simulation:
         output.errorsTotal = 0
 
         signal = self.generator.generate(self.signalLength)
-        packetList = self.transmitter.divBitString(signal, [], self.packetLength) #dzielenie sygnału na listę 8-bitowych pakietów
+        packetList = self.transmitter.divSignal(signal, [], self.packetLength) #dzielenie sygnału na listę 8-bitowych pakietów
         codedPackets = self.encoder.encode(packetList)
         decodedPackets = []
         n = 0
