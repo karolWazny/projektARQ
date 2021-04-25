@@ -7,7 +7,7 @@ class Encoding(Enum):
     PARITY = auto()
     ODDITY = auto()
     HAMMING = auto()
-
+    CRC = auto()
 
 @unique
 class Noise(Enum):

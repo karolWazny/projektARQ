@@ -1,21 +1,32 @@
+from Encoder import*
 class Transmitter:
-    def __init__(self, packetSize, word,packet):
+    def __init__(self, packetSize, signal,packetList):
+        self = None
         self.packetSize = packetSize
-        self.word = word
-        self.packet = packet
+        self.signal = signal
+        self.packetList = packetList
 
-    @staticmethod
-    def divBitString(word,  packet, packetSize):
-        lengthWord=(len(word))
-        while(len(word)%packetSize!=0):
-            word=word+"0"
+    def divSignal(self, signal, packetList, packetSize):
+        key = []
+        packetList=[[0] * 0 for i in range(0)]
+        packet = []
+        counter = 0
+        for x in signal:
+            packet.append(x)
+            counter += 1
+            if(counter == packetSize):
+                packetList.append(packet)
+                Encoder.encode(self, packet)
+                ParityEncoder.encode(self,packet)
+                CRCEncoder.encode(self,packet,key)
+                HammingEncoder.encode(self,packet)
+                packet = []
+                counter = 0
+        if(counter!=0):
+            packetList.append(packet)
+            Encoder.encode(self, packet)
+            ParityEncoder.encode(self,packet)
+            CRCEncoder.encode(self,packet,key)
+            HammingEncoder.encode(self,packet)
+        return packetList
 
-        counter=0
-        while (counter)*packetSize<lengthWord:
-            packet.append(word[0+counter*packetSize:packetSize*(counter+1)])
-            counter=counter+1
-        return packet
-
-
-    def  endecodeData(self):
-        return self
