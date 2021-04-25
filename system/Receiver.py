@@ -22,7 +22,7 @@ class Receiver:
                 break
             except Exception:
                 CRCEncoder.encode(self,packet,key)
-    def decodeHamming(self):
+    def decodeHamming(self,packet):
         HammingDecoder.decode(self)
         while True:
             try:
