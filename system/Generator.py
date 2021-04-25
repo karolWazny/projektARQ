@@ -2,8 +2,11 @@ import random
 
 
 class Generator:
-    def generate(self, length):
+    def __init__(self, length):
+        self.length = length
+
+    def generate(self):
         signal = []
-        for x in range(length):
+        for x in range(self.length):
             signal.append(random.randint(0, 1))
         return signal

@@ -1,39 +1,30 @@
 class Simulation:
-    def __init__(self, signalLength, packetLength, generator, transmitter, encoder, channel, decoder, receiver, params, output):
-        self.signalLength = signalLength
-        self.packetLength = packetLength
+    def __init__(self, generator, channel, transmitter, receiver, simulationLog):
         self.generator = generator
-        self.transmitter = transmitter
-        self.encoder = encoder
         self.channel = channel
-        self.decoder = decoder
+        self.transmitter = transmitter
         self.receiver = receiver
-        self.simulationLog = SimulationLog()
-# symulacja dostanie params jako obiekt (pozmieniać) i konkretny koder/dekoder ktory bedzie stworzony w SetUp
-# w setup ma być noiseModel i codingModel
+        self.simulationLog = simulationLog
+
     def simulate(self):
-        signal = self.generator.generate(self.signalLength)
-        packetList = self.transmitter.divBitString(signal, [], self.packetLength) #dzielenie sygnału na listę 8-bitowych pakietów
-        codedPackets = self.encoder.encode(packetList)
-        decodedPackets = []
-        n = 0
-        while n < len(packetList):
-            output.transmissionsTotal += 1
-            distortedPacket = self.channel.distort(codedPackets[n])
-            receivedPacket = self.receiver.decodeData(distortedPacket)
-            self.decoder.passFrame(receivedPacket)
-            decodedPacket = self.decoder.decode()
-            if packetList[n] != decodedPacket:
-                output.retransmissions += 1  # simulationLog - zapis ze retransmisja się odbyła (zwiększ licznik retransmisji)
-            else:
-                decodedPackets.append(decodedPacket)
-                n += 1
-# sprawdzic pakiet przed zakodowaniem i odebrany (po zdekodowaniu) czy sa takie same == niewykryte bledy
-        if len(packetList) != len(decodedPackets):
-            output.errorsUndetected = abs(len(packetList) - len(decodedPackets))
+        signal = self.generator.generate()
+        packetList = self.transmitter.divBitString(signal, [], self.simulationLog.params.packetLength)  # dzielenie sygnału na listę pakietów
+#        codedPackets = self.encoder.encode(packetList)
+        receivedPackets = []
+        while len(packetList) != len(receivedPackets):
+            for packet in packetList:
+                try:
+                    self.simulationLog.output.transmissionsTotal += 1
+                    codedPacket = self.transmitter(packet)
+                    distortedPacket = self.channel.distort(codedPacket)
+                    receivedPacket = self.receiver.decodeData(distortedPacket)
+                    if packet != receivedPacket:
+                        self.simulationLog.output.retransmissions += 1
+                    else:
+                        receivedPackets.append(receivedPacket)
+                except:
+                    pass
 
-        self.simulationLog.params = parameter
-        self.simulationLog.output = output
+        # sprawdzic pakiet przed zakodowaniem i odebrany (po zdekodowaniu) czy sa takie same == niewykryte bledy
+
         return self.simulationLog
-
-
