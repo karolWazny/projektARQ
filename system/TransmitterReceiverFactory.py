@@ -5,8 +5,8 @@ from .DecoderEncoderFactory import DecoderFactory, EncoderFactory
 
 class TransmitterFactory:
     @staticmethod
-    def createTransmitter(encoding, params):
-        encoder = EncoderFactory.createEncoder(encoding, params)
+    def createTransmitter(encoding):
+        encoder = EncoderFactory.createEncoder(encoding)
         return Transmitter(encoder)
 
 

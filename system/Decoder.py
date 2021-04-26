@@ -1,28 +1,31 @@
 import copy
-from Packet import Packet
+from .Packet import Packet
 import numpy as np
-from .Encoder import*
-def xor(a,b):
+from .Encoder import *
+
+
+def xor(a, b):
     result = []
     for i in range(len(a)):
-        sum=(a[i]+b[i])%2
+        sum = (a[i] + b[i]) % 2
         result.append(sum)
     return result
+
 
 def div(divident, divisor):
     cDivident = 0
     result = []
     tmp = []
     length = len(divisor)
-    cDivident = 0 #counter Divident
-    while(sum(divident[0:(len(divident) - len(divisor) + 1)]) != 0):
-        if(divident[cDivident]!=0):
+    cDivident = 0  # counter Divident
+    while sum(divident[0:(len(divident) - len(divisor) + 1)]) != 0:
+        if divident[cDivident] != 0:
 
-            tmp = divident[cDivident:(cDivident+length)]
-            result = xor(tmp,divisor)
-            CResult=0 #counter Result
-            while(length>CResult):
-                divident[cDivident+CResult]=result[CResult]
+            tmp = divident[cDivident:(cDivident + length)]
+            result = xor(tmp, divisor)
+            CResult = 0  # counter Result
+            while length > CResult:
+                divident[cDivident + CResult] = result[CResult]
                 CResult += 1
         else:
             cDivident += 1
@@ -34,7 +37,6 @@ class Decoder:
     def __init__(self):
         self.currentFrame = None
         self.receivedData = []
-        self.key = []
         self.retransmission = False
 
     def passFrame(self, packet):
@@ -91,16 +93,18 @@ class HammingDecoder(Decoder):
     def buildOutput(self):
         return Packet.fromList(self.currentFrame.content()[0: self.k])
 
+
 class CRCDecoder(Decoder):
+    def __init__(self, key):
+        self.key = key
 
     def decode(self):
-        self.checkForErrors()
-        return Packet
+        return self.checkForErrors()
 
     def checkForErrors(self):
-        self.currentFrame = div(self.currentFrame, self.key)
-        if(sum(self.currentFrame)==0):
-            pass
+        decodedPacket = div(self.currentFrame, self.key) # TODO (przemyśleć dekodowanie)
+        if sum(self.currentFrame) == 0:
+            return decodedPacket
         else:
             raise DecoderException
 
@@ -134,6 +138,7 @@ class HammingMatrixBuilder:
     def getDataBits(self):
         return self.__dataBits
 
+
 class HammingFactory:
     def __init__(self, parameters):
         self.parameters = parameters
@@ -144,29 +149,34 @@ class HammingFactory:
 
     def buildDecoder(self):
         return HammingDecoder(self.matrixBuilder)
-class ParityFactory:
-    def __init__(self,parameters):
-        self.parameters = parameters
 
-    def buildEncoder(self):
+
+class ParityFactory:
+    @staticmethod
+    def buildEncoder():
         return ParityEncoder
 
-    def buildDecoder(self):
+    @staticmethod
+    def buildDecoder():
         return EvenDecoder
 
+
 class CRCFactory:
-    def __init__(self,parameters):
-        self.parameters = parameters
+    def __init__(self, key):
+        self.parameters = key
 
     def buildEncoder(self):
-        return CRCEncoder
+        return CRCEncoder(self.parameters)
 
     def buildDecoder(self):
-        return CRCDecoder
+        return CRCDecoder(self.parameters)
+
+
 if __name__ == '__main__':
     auto = HammingMatrixBuilder(5)
     print(auto.buildHMatrix())
     print(auto.buildGMatrix())
+
 
 class DecoderException(Exception):
     """Wyjątek zgłaszany jako informacja o błędzie wykrytym w
