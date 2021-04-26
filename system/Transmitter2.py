@@ -1,0 +1,39 @@
+from .Packet import Packet
+
+
+class Transmitter:
+    def __init__(self, encoder):
+        self.encoder = encoder
+
+    def transmit(self, packet):
+        return self.encoder.encode(packet)
+
+    @staticmethod
+    def divSignal(signal, packetSize):
+        packetList = []
+        packet = Packet()
+        for x in signal:
+            packet.add(x)
+            if packet.length() == packetSize:
+                packetList.append(packet.content())
+                packet = Packet()
+        if packet.length() > 0:
+            while packet.length() < packetSize:
+                packet.add(0)
+            packetList.append(packet.content())
+        return packetList
+
+    @staticmethod
+    def divSignal2(signal, packetSize):
+        packetList = []
+        packet = []
+        for x in signal:
+            packet.append(x)
+            if len(packet) == packetSize:
+                packetList.append(packet)
+                packet = []
+        if len(packet) > 0:
+            while len(packet) < packetSize:
+                packet.append(0)
+            packetList.append(packet)
+        return packetList

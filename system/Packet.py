@@ -11,6 +11,9 @@ class Packet:
     def content(self):
         return self.__content
 
+    def clear(self):
+        return self.__content.clear()
+
     @staticmethod
     def fromList(content):
         output = Packet()

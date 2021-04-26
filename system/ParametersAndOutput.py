@@ -1,5 +1,7 @@
 import json
+from enum import Enum
 from json import JSONEncoder
+import Enums
 
 
 class SimulationParameters:
@@ -111,12 +113,24 @@ def jsonFileNameFrom(name):
 
 class SimulationEncoder(JSONEncoder):
     def default(self, o):
-        return o.__dict__
+        #if isinstance(o, Enum):
+        #    return o.__dict__['_name_']
+        try:
+            return o.__dict__
+        except Exception:
+            return None
 
 
 if __name__ == '__main__':
     params = SimulationParameters()
     params.packetLength = 6
+    params.totalLength = 1000
+    encoding = {'type': Enums.Encoding.HAMMING,
+                'parityBits': 3}
+    params.encoding = encoding
+    channel = {'type': Enums.Noise.BINARY_SYMMETRIC,
+               'BER': 5}
+    params.noiseModel = channel
     filename = 'params'
     saveObjectToJson(params, filename)
     parameters = readParametersFromJson(filename)
