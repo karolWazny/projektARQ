@@ -17,6 +17,10 @@ class Transmitter:
             if packet.length() == packetSize:
                 packetList.append(packet.content())
                 packet.clear()
+        if packet.length() > 0:
+            while packet.length() != packetSize:
+                packet.add(0)
+            packetList.append(packet.content())
         return packetList
 
 
