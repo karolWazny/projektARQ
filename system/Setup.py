@@ -2,6 +2,8 @@ from .Generator import Generator
 from .Simulation import Simulation
 from .ParametersAndOutput import SimulationParameters, SimulationLog, SimulationOutput
 from .TransmitterReceiverFactory import TransmitterFactory, ReceiverFactory
+from .Channel import ChannelFactoryFactory
+
 
 class Setup:
     def __init__(self, simulationLog):
@@ -9,7 +11,7 @@ class Setup:
 
     def run(self):
         generator = Generator(self.simulationLog.params.totalLength)
-        channel = channelFactory(self.simulationLog.params.noiseModel)
+        channel = ChannelFactoryFactory.buildFactory(self.simulationLog.params.noiseModel)
         transmitter = TransmitterFactory.createTransmitter(self.simulationLog.params.encoding)
         receiver = ReceiverFactory.createReceiver(self.simulationLog.params.encoding)
         self.simulationLog.output = SimulationOutput()
