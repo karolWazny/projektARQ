@@ -1,3 +1,6 @@
+from .Packet import Packet
+
+
 class Transmitter:
     def __init__(self, encoder):
         self.encoder = encoder
@@ -7,11 +10,15 @@ class Transmitter:
 
     @staticmethod
     def divSignal(signal, packetSize):
-        signalLength = (len(signal))
-        counter = 0
         packetList = []
-        while (counter + 1) * packetSize < signalLength:
-            packetList.append(signal[0 + counter * packetSize:packetSize * (counter + 1)])
-            counter += 1
-        packetList.append(signal[packetSize * counter:signalLength])
+        packet = Packet()
+        for x in signal:
+            packet.add(x)
+            if packet.length() == packetSize:
+                packetList.append(packet.content())
+                packet.clear()
         return packetList
+
+
+
+
