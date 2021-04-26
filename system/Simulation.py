@@ -1,4 +1,4 @@
-from .Diver import Diver
+from .Transmitter2 import Diver
 
 
 class Simulation:

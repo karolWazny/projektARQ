@@ -1,18 +1,17 @@
 from .Generator import Generator
 from .Simulation import Simulation
 from .ParametersAndOutput import SimulationParameters, SimulationLog, SimulationOutput
-
+from .TransmitterReceiverFactory import TransmitterFactory, ReceiverFactory
 
 class Setup:
     def __init__(self, simulationLog):
-        self.simulationLog.params = simulationLog
+        self.simulationLog = simulationLog
 
     def run(self):
         generator = Generator(self.simulationLog.params.totalLength)
-        channel = channelFactory(self.simulationLog.params.noiseModel)  # jakis enum
-        transmitter = transmitterFactory(self.simulationLog.params.encoding)
-        # transmitter powinien miec juz uwzgledniony enkoder (stworzyc odpowiedni w fabryce)
-        receiver = receiverFactory(self.simulationLog.params.encoding)  # receiver tez dobrze jakby mial juz przypisany dekoder
+        channel = channelFactory(self.simulationLog.params.noiseModel)
+        transmitter = TransmitterFactory.createTransmitter(self.simulationLog.params.encoding)
+        receiver = ReceiverFactory.createReceiver(self.simulationLog.params.encoding)
         self.simulationLog.output = SimulationOutput()
         simulation = Simulation(generator, channel, transmitter, receiver, self.simulationLog)
         return simulation.simulate()
