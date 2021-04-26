@@ -37,7 +37,6 @@ class Decoder:
     def __init__(self):
         self.currentFrame = None
         self.receivedData = []
-        self.key = []
         self.retransmission = False
 
     def passFrame(self, packet):
@@ -96,15 +95,16 @@ class HammingDecoder(Decoder):
 
 
 class CRCDecoder(Decoder):
+    def __init__(self, key):
+        self.key = key
 
     def decode(self):
-        self.checkForErrors()
-        return Packet
+        return self.checkForErrors()
 
     def checkForErrors(self):
-        self.currentFrame = div(self.currentFrame, self.key)
+        decodedPacket = div(self.currentFrame, self.key) # TODO (przemyśleć dekodowanie)
         if sum(self.currentFrame) == 0:
-            pass
+            return decodedPacket
         else:
             raise DecoderException
 
@@ -152,25 +152,24 @@ class HammingFactory:
 
 
 class ParityFactory:
-    def __init__(self, parameters):
-        self.parameters = parameters
-
-    def buildEncoder(self):
+    @staticmethod
+    def buildEncoder():
         return ParityEncoder
 
-    def buildDecoder(self):
+    @staticmethod
+    def buildDecoder():
         return EvenDecoder
 
 
 class CRCFactory:
-    def __init__(self, parameters):
-        self.parameters = parameters
+    def __init__(self, key):
+        self.parameters = key
 
     def buildEncoder(self):
-        return CRCEncoder
+        return CRCEncoder(self.parameters)
 
     def buildDecoder(self):
-        return CRCDecoder
+        return CRCDecoder(self.parameters)
 
 
 if __name__ == '__main__':
