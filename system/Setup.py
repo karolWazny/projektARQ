@@ -24,7 +24,7 @@ class UserInteraction:
     def choiceParameters():
         simulationLog = SimulationLog()
         simParams = SimulationParameters()
-        while simParams.packetLength is not None and simParams.totalLength is not None and simParams.encoding is not None and simParams.noiseModel is not None
+        while simParams.packetLength is not None and simParams.totalLength is not None and simParams.encoding is not None and simParams.noiseModel is not None:
             try:
                 simParams.totalLength = input("Podaj dlugosc ciagu do transmisji: ")
                 if not type(simParams.totalLength) is int:
