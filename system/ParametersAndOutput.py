@@ -10,6 +10,8 @@ class SimulationParameters:
         self.packetLength = None  # int
         self.noiseModel = None  # słownik, gdzie pierwsza para identyfikuje model, pozostałe to parametry
         self.encoding = None  # słownik, gdzie pierwsza para identyfikuje model, pozostałe to parametry
+        self.crcKey = None
+        self.hammingParityBits = None
 
     @staticmethod
     def fromDictionary(dictionary):
@@ -18,6 +20,8 @@ class SimulationParameters:
         output.totalLength = dictionary['totalLength']
         output.encoding = dictionary['encoding']
         output.noiseModel = dictionary['noiseModel']
+        output.crcKey = dictionary['crcKey']
+        output.hammingParityBits = dictionary['hammingParityBits']
         return output
 
     def __eq__(self, other):
@@ -27,7 +31,9 @@ class SimulationParameters:
         return self.totalLength == other.totalLength and \
                self.packetLength == other.packetLength and \
                self.encoding == other.encoding and \
-               self.noiseModel == other.noiseModel
+               self.noiseModel == other.noiseModel and \
+               self.crcKey == other.crcKey and \
+               self.hammingParityBits == other.hammingParityBits
 
 
 class SimulationOutput:
@@ -113,7 +119,7 @@ def jsonFileNameFrom(name):
 
 class SimulationEncoder(JSONEncoder):
     def default(self, o):
-        #if isinstance(o, Enum):
+        # if isinstance(o, Enum):
         #    return o.__dict__['_name_']
         try:
             return o.__dict__
