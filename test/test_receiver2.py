@@ -6,8 +6,9 @@ from ..system.Packet import Packet
 
 class ReceiverTest(unittest.TestCase):
     def test_receive(self):
-        receiver = Receiver(None)
-        receivedPacket = receiver.receive(Packet)
+        receiver = Receiver(Decoder)
+        packet = Packet()
+        receivedPacket = receiver.receive(packet)
         print(receivedPacket)
         self.assertEqual(None, receivedPacket)
 

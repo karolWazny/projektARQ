@@ -1,33 +1,24 @@
-from .Encoder import *
+from .Packet import Packet
 
 
 class Transmitter:
-    def __init__(self, packetSize, signal, packetList):
-        self = None
-        self.packetSize = packetSize
-        self.signal = signal
-        self.packetList = packetList
+    def __init__(self, encoder):
+        self.encoder = encoder
 
-    def divSignal(self, signal, packetList, packetSize):
-        key = []
-        packetList = [[0] * 0 for i in range(0)]
-        packet = []
-        counter = 0
+    def transmit(self, packet):
+        return self.encoder.encode(packet)
+
+    @staticmethod
+    def divSignal(signal, packetSize):
+        packetList = []
+        packet = Packet()
         for x in signal:
-            packet.append(x)
-            counter += 1
-            if (counter == packetSize):
-                packetList.append(packet)
-                Encoder.encode(self, packet)
-                ParityEncoder.encode(self, packet)
-                CRCEncoder.encode(self, packet, key)
-                HammingEncoder.encode(self, packet)
-                packet = []
-                counter = 0
-        if (counter != 0):
-            packetList.append(packet)
-            Encoder.encode(self, packet)
-            ParityEncoder.encode(self, packet)
-            CRCEncoder.encode(self, packet, key)
-            HammingEncoder.encode(self, packet)
+            packet.add(x)
+            if packet.length() == packetSize:
+                packetList.append(packet.content())
+                packet = Packet()
+        if packet.length() > 0:
+            while packet.length() < packetSize:
+                packet.add(0)
+            packetList.append(packet.content())
         return packetList

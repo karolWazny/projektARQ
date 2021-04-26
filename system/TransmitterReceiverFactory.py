@@ -1,4 +1,4 @@
-from .Transmitter2 import Transmitter
+from .Transmitter import Transmitter
 from .Receiver2 import Receiver
 from .DecoderEncoderFactory import DecoderFactory, EncoderFactory
 
