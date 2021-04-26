@@ -11,7 +11,7 @@ class Setup:
 
     def run(self):
         generator = Generator(self.simulationLog.params.totalLength)
-        channel = ChannelFactoryFactory.buildFactory(self.simulationLog.params.noiseModel)
+        channel = ChannelFactoryFactory.buildFactory(self.simulationLog.params)
         transmitter = TransmitterFactory.createTransmitter(self.simulationLog.params.encoding)
         receiver = ReceiverFactory.createReceiver(self.simulationLog.params.encoding)
         self.simulationLog.output = SimulationOutput()
