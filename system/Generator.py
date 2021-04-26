@@ -1,5 +1,5 @@
 import random
-
+from Encoder import div
 
 class Generator:
     def __init__(self, length):
