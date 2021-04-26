@@ -4,8 +4,8 @@ class UserInteraction:
         self.simulationLog = simulationLog
 
     def chooseParameters(self):
-        while self.simulationLog.params.packetLength is not None and self.simulationLog.params.totalLength is not None \
-                and self.simulationLog.params.encoding is not None and self.simulationLog.params.noiseModel is not None:
+        while self.simulationLog.params.packetLength is not None or self.simulationLog.params.totalLength is not None \
+                or self.simulationLog.params.encoding is not None or self.simulationLog.params.noiseModel is not None:
             try:
                 self.simulationLog.params.totalLength = input("Podaj dlugosc ciagu do transmisji: ")
                 if not type(self.simulationLog.params.totalLength) is int:
