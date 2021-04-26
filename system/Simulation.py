@@ -1,6 +1,3 @@
-from .Transmitter2 import Diver
-
-
 class Simulation:
     def __init__(self, generator, channel, transmitter, receiver, simulationLog):
         self.generator = generator
@@ -11,7 +8,7 @@ class Simulation:
 
     def simulate(self):
         signal = self.generator.generate()
-        packetList = Diver.divSignal(signal, self.simulationLog.params.packetLength)
+        packetList = self.transmitter.divSignal(signal, self.simulationLog.params.packetLength)
         for packet in packetList:
             receivedPacket = None
             while receivedPacket is None:

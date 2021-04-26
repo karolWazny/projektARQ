@@ -5,8 +5,6 @@ class Transmitter:
     def transmit(self, packet):
         return self.encoder.encode(packet)
 
-
-class Diver:
     @staticmethod
     def divSignal(signal, packetSize):
         signalLength = (len(signal))
