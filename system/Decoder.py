@@ -1,7 +1,6 @@
 import copy
-from .Packet import Packet
 import numpy as np
-from .Encoder import *
+from repo.system.Encoder import *
 
 
 def xor(a, b):

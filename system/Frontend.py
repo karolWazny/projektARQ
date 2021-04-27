@@ -1,4 +1,8 @@
 import tkinter as tk
+from repo.system.ParametersAndOutput import *
+from repo.system.Enums import *
+from repo.system.Setup import *
+from datetime import datetime
 
 
 # klasa przekazana w ręce Karola
@@ -31,16 +35,49 @@ class UserInteraction:
         return self.simulationLog
 
 
-class MainWindow:
+class Main:
     def __init__(self):
-        self.window = tk.Tk(className="arq simulator")#todo wymusic zaczynanie z wielkiej litery
-        self.runButt = tk.Button(self.window, text="Run simulation")
-        self.runButt.pack()
-        self.paramButt = tk.Button(self.window, text="Input Parameters")
-        self.paramButt.pack()
-        self.window.geometry("250x100")
+        self.window = self.prepareWindow()
+        self.parameters = self.obtainParameters()
+
+    def prepareWindow(self):
+        window = tk.Tk(className="arq simulator")  # todo wymusic zaczynanie z wielkiej litery
+        runButt = tk.Button(window, text="Run simulation")
+        runButt.pack()
+        paramButt = tk.Button(window, text="Change Parameters")
+        paramButt.pack()
+        window.geometry("250x100")
+        return window
+
+    def run(self):
         self.window.mainloop()
+
+    def obtainParameters(self):
+        try:
+            params = readParametersFromJson('params.json')
+        except FileNotFoundError:
+            params = self.makeDefaultParameters()
+            saveObjectToJson(params, 'params.json')
+        return params
+
+    def makeDefaultParameters(self):
+        params = SimulationParameters()
+        params.packetLength = 8
+        params.totalLength = 1024
+        params.noiseModel = {'type': Noise.BINARY_SYMMETRIC}
+        params.encoding = {'type': Encoding.PARITY}
+        return params
+
+    def runSimulation(self):
+        now = datetime.now()
+        log = SimulationLog()
+        log.params = self.parameters
+        setup = Setup(log)
+        setup.run()
+        filename = now.strftime("%Y-%m-%d-%H%M%S")
+        saveObjectToJson(log, filename)
 
 
 if __name__ == '__main__':
-    mainFrame = MainWindow()
+    main = Main()
+    main.run()

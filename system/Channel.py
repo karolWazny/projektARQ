@@ -1,6 +1,6 @@
-from .Random import *
-from .Packet import Packet
-from .Enums import Noise
+from repo.system.Random import *
+from repo.system.Packet import Packet
+from repo.system.Enums import Noise
 
 
 class Channel:

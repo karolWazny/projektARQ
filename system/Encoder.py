@@ -1,6 +1,6 @@
 import numpy
 
-from .Packet import Packet
+from repo.system.Packet import Packet
 import copy
 
 

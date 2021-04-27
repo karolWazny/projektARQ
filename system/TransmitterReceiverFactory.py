@@ -1,6 +1,6 @@
-from .Transmitter import Transmitter
-from .Receiver2 import Receiver
-from .DecoderEncoderFactory import DecoderFactory, EncoderFactory
+from repo.system.Transmitter import Transmitter
+from repo.system.Receiver2 import Receiver
+from repo.system.DecoderEncoderFactory import DecoderFactory, EncoderFactory
 
 
 class TransmitterFactory:
