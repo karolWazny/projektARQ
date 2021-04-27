@@ -1,37 +1,13 @@
-from .Decoder import *
-from .Encoder import *
-from .Packet import Packet
+from Decoder import DecoderException
+
+
 class Receiver:
-    def __init__(self):
-        self.completeData = []
-        self.receivedData = []
+    def __init__(self, decoder):
+        self.decoder = decoder
 
-    def decodeParity(self,packet):
-        EvenDecoder.decode(self)
-        while True:
-            try:
-                EvenDecoder.checkForError(self)
-                return Packet
-            except Exception:
-                ParityEncoder.encode(self,packet)
-    def decodeCRC(self,packet,key):
-        CRCDecoder.decode(self)
-        while True:
-            try:
-                CRCDecoder.checkForError(self)
-                return packet
-            except Exception:
-                packet = None
-                return None
-    def decodeHamming(self,packet):
-        HammingDecoder.decode(self)
-        while True:
-            try:
-                HammingDecoder.checkForError(self)
-                return packet
-            except Exception:
-                packet = None
-                return None
-
-
-
+    def receive(self, packet):
+        try:
+            self.decoder.passFrame(packet)
+            return self.decoder.decode()
+        except DecoderException:
+            return None
