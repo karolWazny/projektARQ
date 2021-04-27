@@ -79,7 +79,3 @@ class Main:
         filename = now.strftime("%Y-%m-%d-%H%M%S")
         saveObjectToJson(log, filename)
 
-
-if __name__ == '__main__':
-    main = Main()
-    main.run()
