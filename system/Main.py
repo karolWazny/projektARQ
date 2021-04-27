@@ -11,7 +11,7 @@ class Main:
         user = UserInteraction(simulationLog)
         userParameters = user.chooseParameters()
         setup = Setup(userParameters)
-        simulation = setup.run()
+        simulation = setup.getSimulation()
         simulationEndLog = simulation.simulate()
         # TODO zrobic podawanie nazwy pliku przez uzytkownika albo jakos inaczej
         filename = 'randomName'

@@ -42,7 +42,7 @@ class Main:
 
     def prepareWindow(self):
         window = tk.Tk(className="arq simulator")  # todo wymusic zaczynanie z wielkiej litery
-        runButt = tk.Button(window, text="Run simulation")
+        runButt = tk.Button(window, text="Run simulation", command=self.runSimulation)
         runButt.pack()
         paramButt = tk.Button(window, text="Change Parameters")
         paramButt.pack()
@@ -64,7 +64,8 @@ class Main:
         params = SimulationParameters()
         params.packetLength = 8
         params.totalLength = 1024
-        params.noiseModel = {'type': Noise.BINARY_SYMMETRIC}
+        params.noiseModel = {'type': Noise.BINARY_SYMMETRIC,
+                             'BER': 10}
         params.encoding = {'type': Encoding.PARITY}
         return params
 
@@ -73,7 +74,8 @@ class Main:
         log = SimulationLog()
         log.params = self.parameters
         setup = Setup(log)
-        setup.run()
+        simulation = setup.getSimulation()
+        simulation.simulate()
         filename = now.strftime("%Y-%m-%d-%H%M%S")
         saveObjectToJson(log, filename)
 
