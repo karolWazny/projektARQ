@@ -1,7 +1,7 @@
 import json
-from enum import Enum
 from json import JSONEncoder
-import Enums
+
+from repo.system.Enums import *
 
 
 class SimulationParameters:
@@ -113,8 +113,8 @@ def jsonFileNameFrom(name):
 
 class SimulationEncoder(JSONEncoder):
     def default(self, o):
-        #if isinstance(o, Enum):
-        #    return o.__dict__['_name_']
+        if isinstance(o, Enum):
+            return o.__dict__['_name_']
         try:
             return o.__dict__
         except Exception:
@@ -125,10 +125,10 @@ if __name__ == '__main__':
     params = SimulationParameters()
     params.packetLength = 6
     params.totalLength = 1000
-    encoding = {'type': Enums.Encoding.HAMMING,
+    encoding = {'type': Encoding.HAMMING,
                 'parityBits': 3}
     params.encoding = encoding
-    channel = {'type': Enums.Noise.BINARY_SYMMETRIC,
+    channel = {'type': Noise.BINARY_SYMMETRIC,
                'BER': 5}
     params.noiseModel = channel
     filename = 'params'

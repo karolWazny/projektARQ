@@ -1,6 +1,6 @@
-from .Random import *
-from .Packet import Packet
-from .Enums import Noise
+from repo.system.Random import *
+from repo.system.Packet import Packet
+from repo.system.Enums import Noise
 
 
 class Channel:
@@ -144,26 +144,25 @@ class ZChannelFactory(ChannelFactory):
 
 class TwoStateChannelFactory(ChannelFactory):
     def buildChannel(self):
-        factory = ChannelFactoryFactory.buildFactory(self.parameters['firstChannel'])
-        firstChanel = factory.buildChannel()
-        factory = ChannelFactoryFactory.buildFactory(self.parameters['secondChannel'])
-        secondChannel = factory.buildChannel()
+        firstChanel = AllChannelFactory.buildChannel(self.parameters['firstChannel'])
+        secondChannel = AllChannelFactory.buildChannel(self.parameters['secondChannel'])
         output = TwoStateMarkovChannel(firstChanel, secondChannel)
         output.setFirstToSecondProbabilityInPercent(self.parameters['firstToSecondProbability'])
         output.setSecondToFirstProbability(self.parameters['secondToFirstProbability'])
         return output
 
 
-class ChannelFactoryFactory:
+class AllChannelFactory:
     @staticmethod
-    def buildFactory(channelParameters):
+    def buildChannel(channelParameters):
         if channelParameters['type'] == Noise.BINARY_SYMMETRIC:
-            return BSCFactory(channelParameters)
+            factory = BSCFactory(channelParameters)
         elif channelParameters['type'] == Noise.BINARY_ERASURE:
-            return BECFactory(channelParameters)
+            factory = BECFactory(channelParameters)
         elif channelParameters['type'] == Noise.Z_CHANNEL:
-            return ZChannelFactory(channelParameters)
+            factory = ZChannelFactory(channelParameters)
         elif channelParameters['type'] == Noise.TWO_STATE:
-            return TwoStateChannelFactory(channelParameters)
+            factory = TwoStateChannelFactory(channelParameters)
         else:
             raise Exception()
+        return factory.buildChannel()
