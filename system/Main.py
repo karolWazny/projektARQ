@@ -1,6 +1,6 @@
-from .ParametersAndOutput import SimulationLog, SimulationParameters, SimulationOutput, saveObjectToJson
-from .Frontend import UserInteraction
-from .Setup import Setup
+from repo.system.ParametersAndOutput import SimulationLog, SimulationParameters, SimulationOutput, saveObjectToJson
+from repo.system.Frontend import UserInteraction
+from repo.system.Setup import Setup
 
 
 class Main:

@@ -1,7 +1,7 @@
 import json
-from enum import Enum
 from json import JSONEncoder
-import Enums
+
+from repo.system.Enums import *
 
 
 class SimulationParameters:
@@ -10,8 +10,6 @@ class SimulationParameters:
         self.packetLength = None  # int
         self.noiseModel = None  # słownik, gdzie pierwsza para identyfikuje model, pozostałe to parametry
         self.encoding = None  # słownik, gdzie pierwsza para identyfikuje model, pozostałe to parametry
-        self.crcKey = None
-        self.hammingParityBits = None
 
     @staticmethod
     def fromDictionary(dictionary):
@@ -20,8 +18,6 @@ class SimulationParameters:
         output.totalLength = dictionary['totalLength']
         output.encoding = dictionary['encoding']
         output.noiseModel = dictionary['noiseModel']
-        output.crcKey = dictionary['crcKey']
-        output.hammingParityBits = dictionary['hammingParityBits']
         return output
 
     def __eq__(self, other):
@@ -31,9 +27,7 @@ class SimulationParameters:
         return self.totalLength == other.totalLength and \
                self.packetLength == other.packetLength and \
                self.encoding == other.encoding and \
-               self.noiseModel == other.noiseModel and \
-               self.crcKey == other.crcKey and \
-               self.hammingParityBits == other.hammingParityBits
+               self.noiseModel == other.noiseModel
 
 
 class SimulationOutput:
@@ -119,8 +113,8 @@ def jsonFileNameFrom(name):
 
 class SimulationEncoder(JSONEncoder):
     def default(self, o):
-        # if isinstance(o, Enum):
-        #    return o.__dict__['_name_']
+        if isinstance(o, Enum):
+            return o.__dict__['_name_']
         try:
             return o.__dict__
         except Exception:
@@ -131,10 +125,10 @@ if __name__ == '__main__':
     params = SimulationParameters()
     params.packetLength = 6
     params.totalLength = 1000
-    encoding = {'type': Enums.Encoding.HAMMING,
+    encoding = {'type': Encoding.HAMMING,
                 'parityBits': 3}
     params.encoding = encoding
-    channel = {'type': Enums.Noise.BINARY_SYMMETRIC,
+    channel = {'type': Noise.BINARY_SYMMETRIC,
                'BER': 5}
     params.noiseModel = channel
     filename = 'params'

@@ -1,6 +1,6 @@
-from .Decoder import *
-from .Encoder import *
-from .Packet import Packet
+from repo.system.Decoder import *
+from repo.system.Encoder import *
+from repo.system.Packet import Packet
 class Receiver:
     def __init__(self):
         self.completeData = []

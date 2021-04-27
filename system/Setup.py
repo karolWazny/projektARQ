@@ -1,7 +1,7 @@
-from .Generator import Generator
-from .Simulation import Simulation
-from .TransmitterReceiverFactory import TransmitterFactory, ReceiverFactory
-from .Channel import ChannelFactoryFactory
+from repo.system.Generator import Generator
+from repo.system.Simulation import Simulation
+from repo.system.TransmitterReceiverFactory import TransmitterFactory, ReceiverFactory
+from repo.system.Channel import AllChannelFactory
 
 
 class Setup:
@@ -10,7 +10,7 @@ class Setup:
 
     def run(self):
         generator = Generator(self.simulationLog.params.totalLength)
-        channel = ChannelFactoryFactory.buildFactory(self.simulationLog.params.noiseModel)
+        channel = AllChannelFactory.buildFactory(self.simulationLog.params.noiseModel)
         transmitter = TransmitterFactory.createTransmitter(self.simulationLog.params.encoding,
                                                            self.simulationLog.params.crcKey,
                                                            self.simulationLog.params.hammingParityBits)
