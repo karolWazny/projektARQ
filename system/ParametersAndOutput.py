@@ -113,8 +113,8 @@ def jsonFileNameFrom(name):
 
 class SimulationEncoder(JSONEncoder):
     def default(self, o):
-        #if isinstance(o, Enum):
-        #    return o.__dict__['_name_']
+        if isinstance(o, Enum):
+            return o.__dict__['_name_']
         try:
             return o.__dict__
         except Exception:
