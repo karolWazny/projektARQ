@@ -1,3 +1,6 @@
+import tkinter as tk
+
+
 # klasa przekazana w ręce Karola
 class UserInteraction:
     def __init__(self, simulationLog):
@@ -26,3 +29,18 @@ class UserInteraction:
             except (TypeError, ValueError, NameError):
                 pass
         return self.simulationLog
+
+
+class MainWindow:
+    def __init__(self):
+        self.window = tk.Tk(className="arq simulator")#todo wymusic zaczynanie z wielkiej litery
+        self.runButt = tk.Button(self.window, text="Run simulation")
+        self.runButt.pack()
+        self.paramButt = tk.Button(self.window, text="Input Parameters")
+        self.paramButt.pack()
+        self.window.geometry("250x100")
+        self.window.mainloop()
+
+
+if __name__ == '__main__':
+    mainFrame = MainWindow()
