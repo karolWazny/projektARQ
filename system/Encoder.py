@@ -74,11 +74,12 @@ class ParityEncoder(Encoder):
 
 
 class CRCEncoder(Encoder):
-    def __init__(self):
+    def __init__(self, key):
+        self.key = key
         super().__init__()
 
-    def encode(self, packet, key):
+    def encode(self, packet):
         tmp = copy.deepcopy(packet)
-        tmp = CRCKey(tmp, key)
-        tmp = div(tmp, key)
+        tmp = CRCKey(tmp, self.key)
+        tmp = div(tmp, self.key)
         return tmp

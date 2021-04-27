@@ -12,6 +12,13 @@ class PacketTest(unittest.TestCase):
         packet.add(False)
         self.assertEqual(packet.length(), 2)
 
+    def test_clear(self):
+        packet = Packet()
+        packet.add(4)
+        self.assertEqual(packet.length(), 1)
+        packet.clear()
+        self.assertEqual(packet.length(), 0)
+
 
 if __name__ == '__main__':
     unittest.main()
