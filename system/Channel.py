@@ -144,15 +144,15 @@ class ZChannelFactory(ChannelFactory):
 
 class TwoStateChannelFactory(ChannelFactory):
     def buildChannel(self):
-        firstChanel = ChannelFactoryFactory.buildFactory(self.parameters['firstChannel'])
-        secondChannel = ChannelFactoryFactory.buildFactory(self.parameters['secondChannel'])
+        firstChanel = AllChannelFactory.buildFactory(self.parameters['firstChannel'])
+        secondChannel = AllChannelFactory.buildFactory(self.parameters['secondChannel'])
         output = TwoStateMarkovChannel(firstChanel, secondChannel)
         output.setFirstToSecondProbabilityInPercent(self.parameters['firstToSecondProbability'])
         output.setSecondToFirstProbability(self.parameters['secondToFirstProbability'])
         return output
 
 
-class ChannelFactoryFactory:
+class AllChannelFactory:
     @staticmethod
     def buildFactory(channelParameters):
         if channelParameters['type'] == Noise.BINARY_SYMMETRIC:
