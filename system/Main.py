@@ -11,7 +11,8 @@ class Main:
         user = UserInteraction(simulationLog)
         userParameters = user.chooseParameters()
         setup = Setup(userParameters)
-        simulationEndLog = setup.run()
+        simulation = setup.run()
+        simulationEndLog = simulation.simulate()
         # TODO zrobic podawanie nazwy pliku przez uzytkownika albo jakos inaczej
         filename = 'randomName'
         saveObjectToJson(simulationEndLog, filename)

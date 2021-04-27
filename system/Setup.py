@@ -17,4 +17,4 @@ class Setup:
         receiver = ReceiverFactory.createReceiver(self.simulationLog.params.encoding, self.simulationLog.params.crcKey,
                                                   self.simulationLog.params.hammingParityBits)
         simulation = Simulation(generator, channel, transmitter, receiver, self.simulationLog)
-        return simulation.simulate()
+        return simulation
