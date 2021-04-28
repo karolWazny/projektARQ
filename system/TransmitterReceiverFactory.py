@@ -24,12 +24,12 @@ class EncoderDecoderFactory:
         self.parityBits = parityBits
 
     def createEncoder(self):
-        encoderFactory = self.chooseSpecificFactory(self)
+        encoderFactory = self.chooseSpecificFactory()
         encoder = encoderFactory.buildEncoder()
         return encoder
 
     def createDecoder(self):
-        decoderFactory = self.chooseSpecificFactory(self)
+        decoderFactory = self.chooseSpecificFactory()
         decoder = decoderFactory.buildDecoder()
         return decoder
 
