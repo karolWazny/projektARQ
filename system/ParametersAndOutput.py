@@ -59,7 +59,7 @@ class SimulationOutput:
 class SimulationLog:
     def __init__(self):
         self.params = None
-        self.output = None
+        self.output = SimulationOutput()
 
     @staticmethod
     def fromDictionary(dictionary):
