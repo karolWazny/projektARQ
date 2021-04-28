@@ -76,7 +76,7 @@ class CRCEncoder(Encoder):
         super().__init__()
 
     def encode(self, packet):
-        tmp = copy.deepcopy(packet)
+        tmp = copy.deepcopy(packet.content())
         tmp = CRCKey(tmp, self.key)
         tmp = div(tmp, self.key)
-        return tmp
+        return Packet.fromList(tmp)
