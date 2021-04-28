@@ -42,9 +42,6 @@ def div(divident, divisor):
 class Encoder:
     def __init__(self):
         self.currentPacket = None
-        self.data = []
-        self.sentData = []
-        self.key = [0]
 
     def encode(self, packet):
         self.currentPacket = packet
@@ -65,12 +62,12 @@ class ParityEncoder(Encoder):
         super().__init__()
 
     def encode(self, packet):
-        tmp = copy.deepcopy(packet)
+        tmp = packet.content()
         if sum(tmp) % 2 == 0:
             tmp.append(0)
         else:
             tmp.append(1)
-        return Packet.fromList(tmp)
+        return tmp
 
 
 class CRCEncoder(Encoder):
@@ -79,7 +76,7 @@ class CRCEncoder(Encoder):
         super().__init__()
 
     def encode(self, packet):
-        tmp = copy.deepcopy(packet)
+        tmp = packet.content()
         tmp = CRCKey(tmp, self.key)
         tmp = div(tmp, self.key)
         return tmp

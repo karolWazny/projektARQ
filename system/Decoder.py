@@ -1,6 +1,6 @@
 import copy
 import numpy as np
-from repo.system.Encoder import *
+from Encoder import *
 
 
 def xor(a, b):
@@ -35,8 +35,6 @@ def div(divident, divisor):
 class Decoder:
     def __init__(self):
         self.currentFrame = None
-        self.receivedData = []
-        self.retransmission = False
 
     def passFrame(self, packet):
         self.currentFrame = packet
