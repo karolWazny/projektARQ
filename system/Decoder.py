@@ -98,8 +98,8 @@ class CRCDecoder(Decoder):
         return self.checkForErrors()
 
     def checkForErrors(self):
-        decodedPacket = div(self.currentFrame, self.key) # TODO (przemyśleć dekodowanie)
-        if sum(self.currentFrame) == 0:
+        decodedPacket = div(self.currentFrame.content(), self.key) # TODO (przemyśleć dekodowanie)
+        if sum(self.currentFrame.content()) == 0:
             return decodedPacket
         else:
             raise DecoderException

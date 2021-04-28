@@ -6,7 +6,7 @@ import copy
 
 def CRCKey(packet, key):
     for i in range(len(key) - 1):
-        packet.append(0)
+        packet.add(0)
     return packet
 
 
@@ -24,13 +24,13 @@ def div(divident, divisor):
     tmp = []
     length = len(divisor)
     cDivident = 0  # counter Divident
-    while (sum(divident[0:(len(divident) - len(divisor) + 1)]) != 0):
-        if (divident[cDivident] != 0):
+    while sum(divident[0:(len(divident) - len(divisor) + 1)]) != 0:
+        if divident[cDivident] != 0:
 
             tmp = divident[cDivident:(cDivident + length)]
             result = xor(tmp, divisor)
             CResult = 0  # counter Result
-            while (length > CResult):
+            while length > CResult:
                 divident[cDivident + CResult] = result[CResult]
                 CResult += 1
         else:
@@ -78,5 +78,5 @@ class CRCEncoder(Encoder):
     def encode(self, packet):
         tmp = copy.deepcopy(packet)
         tmp = CRCKey(tmp, self.key)
-        tmp = div(tmp, self.key)
-        return tmp
+        tmp = div(tmp.content(), self.key)
+        return Packet.fromList(tmp)

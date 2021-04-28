@@ -13,7 +13,7 @@ class EncoderFactory:
         if encoding['type'] == Encoding.PARITY:
             return ParityFactory.buildEncoder()
         elif encoding['type'] == Encoding.CRC:
-            crc = CRCFactory(key)
+            crc = CRCFactory(encoding['key'])
             return crc.buildEncoder()
         elif encoding['type'] == Encoding.HAMMING:
             hamming = HammingFactory(encoding)
@@ -24,16 +24,16 @@ class EncoderFactory:
 
 class DecoderFactory:
     @staticmethod
-    def createDecoder(encoding, key=None, parityBits=None):
-        decoder = DecoderFactory.chooseFabricOfDecoder(encoding, key, parityBits)
+    def createDecoder(encoding):
+        decoder = DecoderFactory.chooseFabricOfDecoder(encoding)
         return decoder
 
     @staticmethod
-    def chooseFabricOfDecoder(encoding, key, parityBits):
+    def chooseFabricOfDecoder(encoding):
         if encoding['type'] == Encoding.PARITY:
             return ParityFactory.buildDecoder()
         elif encoding['type'] == Encoding.CRC:
-            crc = CRCFactory(key)
+            crc = CRCFactory(encoding['key'])
             return crc.buildDecoder()
         elif encoding['type'] == Encoding.HAMMING:
             hamming = HammingFactory(encoding)
