@@ -70,7 +70,7 @@ class ParityEncoder(Encoder):
             tmp.append(0)
         else:
             tmp.append(1)
-        return tmp
+        return Packet.fromList(tmp)
 
 
 class CRCEncoder(Encoder):

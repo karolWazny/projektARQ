@@ -14,6 +14,13 @@ class Packet:
     def clear(self):
         return self.__content.clear()
 
+    def __eq__(self, other):
+        if other == self.__content:
+            return True
+        elif not isinstance(other, Packet):
+            return False
+        return other.__dict__ == self.__dict__
+
     @staticmethod
     def fromList(content):
         output = Packet()

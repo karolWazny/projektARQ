@@ -5,6 +5,10 @@ class Simulation:
         self.transmitter = transmitter
         self.receiver = receiver
         self.simulationLog = simulationLog
+        self.simulationLog.output.retransmissions = 0
+        self.simulationLog.output.transmissionsTotal = 0
+        self.simulationLog.output.errorsUndetected = 0
+        self.simulationLog.output.errorsTotal = 0
 
     def simulate(self):
         signal = self.generator.generate()
