@@ -1,5 +1,5 @@
 from repo.system.Transmitter import Transmitter
-from repo.system.Receiver2 import Receiver
+from repo.system.Receiver import Receiver
 from repo.system.DecoderEncoderFactory import DecoderFactory, EncoderFactory
 
 
