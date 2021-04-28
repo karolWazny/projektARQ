@@ -148,6 +148,7 @@ class HammingFactory:
 
 
 class ParityFactory:
+
     @staticmethod
     def buildEncoder():
         return ParityEncoder()

@@ -1,6 +1,7 @@
 import random
 from repo.system.Encoder import div
 
+
 class Generator:
     def __init__(self, length):
         self.length = length
