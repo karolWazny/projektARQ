@@ -15,7 +15,7 @@ class Transmitter:
         for x in signal:
             packet.add(x)
             if packet.length() == packetSize:
-                packetList.append(packet.content())
+                packetList.append(packet)
                 packet = Packet()
         if packet.length() > 0:
             while packet.length() < packetSize:

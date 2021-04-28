@@ -42,9 +42,6 @@ def div(divident, divisor):
 class Encoder:
     def __init__(self):
         self.currentPacket = None
-        self.data = []
-        self.sentData = []
-        self.key = [0]
 
     def encode(self, packet):
         self.currentPacket = packet
@@ -65,7 +62,7 @@ class ParityEncoder(Encoder):
         super().__init__()
 
     def encode(self, packet):
-        tmp = copy.deepcopy(packet)
+        tmp = copy.deepcopy(packet.content())
         if sum(tmp) % 2 == 0:
             tmp.append(0)
         else:

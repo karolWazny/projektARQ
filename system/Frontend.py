@@ -44,7 +44,7 @@ class Main:
         window = tk.Tk(className="arq simulator")  # todo wymusic zaczynanie z wielkiej litery
         runButt = tk.Button(window, text="Run simulation", command=self.runSimulation)
         runButt.pack()
-        paramButt = tk.Button(window, text="Change Parameters")
+        paramButt = tk.Button(window, text="Change Parameters", command=self.changeParameters)
         paramButt.pack()
         window.geometry("250x100")
         return window
@@ -78,4 +78,7 @@ class Main:
         simulation.simulate()
         filename = now.strftime("%Y-%m-%d-%H%M%S")
         saveObjectToJson(log, filename)
+
+    def changeParameters(self):
+        pass
 

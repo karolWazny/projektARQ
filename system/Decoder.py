@@ -35,7 +35,6 @@ def div(divident, divisor):
 class Decoder:
     def __init__(self):
         self.currentFrame = None
-        self.receivedData = []
         self.retransmission = False
 
     def passFrame(self, packet):
@@ -45,7 +44,7 @@ class Decoder:
         return self.currentFrame
 
 
-class EvenDecoder(Decoder):
+class ParityDecoder(Decoder):
     def decode(self):
         self.checkForError()
         return self.makeOutput()
@@ -65,9 +64,7 @@ class EvenDecoder(Decoder):
         return self.currentFrame.length() == 0
 
     def isOdd(self):
-        isOdd = False
-        for bit in self.currentFrame.content():
-            isOdd = bool(isOdd) ^ bool(bit)
+        isOdd = sum(self.currentFrame.content()) % 2
         return isOdd
 
 
@@ -157,7 +154,7 @@ class ParityFactory:
 
     @staticmethod
     def buildDecoder():
-        return EvenDecoder()
+        return ParityDecoder()
 
 
 class CRCFactory:

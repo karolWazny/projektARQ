@@ -15,9 +15,9 @@ class Packet:
         return self.__content.clear()
 
     def __eq__(self, other):
-        if other == self.__content:
-            return True
-        elif not isinstance(other, Packet):
+        if isinstance(other, list):
+            return other == self.__content
+        elif other is None:
             return False
         return other.__dict__ == self.__dict__
 

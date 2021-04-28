@@ -6,7 +6,7 @@ from ..system.Encoder import *
 class DecoderTest(unittest.TestCase):
     def test_evenDecoderEmptyPacketThrowsException(self):
         packet = Packet()
-        decoder = EvenDecoder()
+        decoder = ParityDecoder()
         decoder.passFrame(packet)
         try:
             decoder.decode()
@@ -17,7 +17,7 @@ class DecoderTest(unittest.TestCase):
 
     def test_evenDecoderCorrectPacketNoThrow(self):
         packet = Packet()
-        decoder = EvenDecoder()
+        decoder = ParityDecoder()
         packet.add(True)
         packet.add(True)
         packet.add(False)
@@ -31,7 +31,7 @@ class DecoderTest(unittest.TestCase):
 
     def test_evenDecoderIncorrectPacketThrows(self):
         packet = Packet()
-        decoder = EvenDecoder()
+        decoder = ParityDecoder()
         packet.add(True)
         packet.add(True)
         packet.add(True)
@@ -47,7 +47,7 @@ class DecoderTest(unittest.TestCase):
 
     def test_evenDecoderDecodesPackage(self):
         packet = Packet()
-        decoder = EvenDecoder()
+        decoder = ParityDecoder()
         packet.add(True)
         packet.add(True)
         packet.add(True)

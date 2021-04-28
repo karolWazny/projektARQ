@@ -7,10 +7,10 @@ class Receiver:
         self.receivedData = []
 
     def decodeParity(self,packet):
-        EvenDecoder.decode(self)
+        ParityDecoder.decode(self)
         while True:
             try:
-                EvenDecoder.checkForError(self)
+                ParityDecoder.checkForError(self)
                 return Packet
             except Exception:
                 ParityEncoder.encode(self,packet)
