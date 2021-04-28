@@ -153,11 +153,11 @@ class HammingFactory:
 class ParityFactory:
     @staticmethod
     def buildEncoder():
-        return ParityEncoder
+        return ParityEncoder()
 
     @staticmethod
     def buildDecoder():
-        return EvenDecoder
+        return EvenDecoder()
 
 
 class CRCFactory:
