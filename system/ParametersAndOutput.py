@@ -1,7 +1,7 @@
 import json
 from json import JSONEncoder
 
-from Enums import *
+from repo.system.Enums import *
 
 
 class SimulationParameters:

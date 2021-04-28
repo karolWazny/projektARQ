@@ -1,5 +1,5 @@
 import unittest
-from ..system.Receiver2 import Receiver
+from ..system.Receiver import Receiver
 from ..system.Decoder import Decoder, ParityDecoder
 from ..system.Packet import Packet
 

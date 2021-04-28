@@ -1,3 +1,4 @@
+import copy
 import tkinter as tk
 from repo.system.ParametersAndOutput import *
 from repo.system.Enums import *
@@ -80,5 +81,19 @@ class Main:
         saveObjectToJson(log, filename)
 
     def changeParameters(self):
-        pass
+        paramWindow = ParametersChanger(self.parameters)
+        paramWindow.run()
+
+
+class ParametersChanger:
+    def __init__(self, parameters):
+        self.parameters = parameters
+        self.window = self.prepareWindow()
+
+    def run(self):
+        #self.window.mainloop()
+        self.window.grab_set()
+
+    def prepareWindow(self):
+        return tk.Tk()
 
