@@ -18,10 +18,8 @@ class TransmitterReceiverFactory:
 
 
 class EncoderDecoderFactory:
-    def __init__(self, encoding, key=None, parityBits=None):
+    def __init__(self, encoding):
         self.encoding = encoding
-        self.key = key
-        self.parityBits = parityBits
 
     def createEncoder(self):
         encoderFactory = self.chooseSpecificFactory()
@@ -37,8 +35,8 @@ class EncoderDecoderFactory:
         if self.encoding['type'] == Encoding.PARITY:
             return ParityFactory()
         elif self.encoding['type'] == Encoding.CRC:
-            return CRCFactory(self.encoding.key)
+            return CRCFactory(self.encoding['key'])
         elif self.encoding['type'] == Encoding.HAMMING:
-            return HammingFactory(self.encoding.parityBits)
+            return HammingFactory(self.encoding['parityBits'])
         else:
             raise Exception()
