@@ -5,13 +5,13 @@ from repo.system.DecoderEncoderFactory import DecoderFactory, EncoderFactory
 
 class TransmitterFactory:
     @staticmethod
-    def createTransmitter(encoding, crcKey, parityBits):
-        encoder = EncoderFactory.createEncoder(encoding, crcKey, parityBits)
+    def createTransmitter(encoding):
+        encoder = EncoderFactory.createEncoder(encoding)
         return Transmitter(encoder)
 
 
 class ReceiverFactory:
     @staticmethod
-    def createReceiver(encoding, crcKey, parityBits):
-        decoder = DecoderFactory.createDecoder(encoding, crcKey, parityBits)
+    def createReceiver(encoding):
+        decoder = DecoderFactory.createDecoder(encoding)
         return Receiver(decoder)

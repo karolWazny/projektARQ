@@ -8,13 +8,10 @@ class Setup:
     def __init__(self, simulationLog):
         self.simulationLog = simulationLog
 
-    def run(self):
+    def getSimulation(self):
         generator = Generator(self.simulationLog.params.totalLength)
-        channel = AllChannelFactory.buildFactory(self.simulationLog.params.noiseModel)
-        transmitter = TransmitterFactory.createTransmitter(self.simulationLog.params.encoding,
-                                                           self.simulationLog.params.crcKey,
-                                                           self.simulationLog.params.hammingParityBits)
-        receiver = ReceiverFactory.createReceiver(self.simulationLog.params.encoding, self.simulationLog.params.crcKey,
-                                                  self.simulationLog.params.hammingParityBits)
+        channel = AllChannelFactory.buildChannel(self.simulationLog.params.noiseModel)
+        transmitter = TransmitterFactory.createTransmitter(self.simulationLog.params.encoding)
+        receiver = ReceiverFactory.createReceiver(self.simulationLog.params.encoding)
         simulation = Simulation(generator, channel, transmitter, receiver, self.simulationLog)
         return simulation
