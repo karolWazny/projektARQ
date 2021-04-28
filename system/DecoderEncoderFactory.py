@@ -16,7 +16,7 @@ class EncoderFactory:
             crc = CRCFactory(key)
             return crc.buildEncoder()
         elif encoding['type'] == Encoding.HAMMING:
-            hamming = HammingFactory(parityBits)
+            hamming = HammingFactory(encoding)
             return hamming.buildEncoder()
         else:
             raise Exception()
@@ -36,7 +36,7 @@ class DecoderFactory:
             crc = CRCFactory(key)
             return crc.buildDecoder()
         elif encoding['type'] == Encoding.HAMMING:
-            hamming = HammingFactory(parityBits)
+            hamming = HammingFactory(encoding)
             return hamming.buildDecoder()
         else:
             raise Exception()
