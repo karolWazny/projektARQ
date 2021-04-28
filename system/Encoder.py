@@ -6,7 +6,7 @@ import copy
 
 def CRCKey(packet, key):
     for i in range(len(key) - 1):
-        packet.append(0)
+        packet.add(0)
     return packet
 
 

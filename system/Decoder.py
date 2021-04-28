@@ -100,7 +100,7 @@ class CRCDecoder(Decoder):
     def checkForErrors(self):
         decodedPacket = div(self.currentFrame.content(), self.key)
         if sum(decodedPacket) == 0:
-            return Packet.fromList(self.currentFrame.content()[:-self.key+1])
+            return Packet.fromList(self.currentFrame.content()[:-len(self.key)+1])
         else:
             raise DecoderException
 

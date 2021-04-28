@@ -37,6 +37,6 @@ class EncoderDecoderFactory:
         elif self.encoding['type'] == Encoding.CRC:
             return CRCFactory(self.encoding['key'])
         elif self.encoding['type'] == Encoding.HAMMING:
-            return HammingFactory(self.encoding['parityBits'])
+            return HammingFactory(self.encoding)
         else:
             raise Exception()
