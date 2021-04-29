@@ -14,8 +14,8 @@ class SimulationParameters:
     @staticmethod
     def fromDictionary(dictionary):
         output = SimulationParameters()
-        output.packetLength = dictionary['packetLength']
-        output.totalLength = dictionary['totalLength']
+        output.packetLength = dictionary['encoding']['packetLength']
+        output.totalLength = dictionary['encoding']['totalLength']
         output.encoding = dictionary['encoding']
         output.noiseModel = dictionary['noiseModel']
         return output
