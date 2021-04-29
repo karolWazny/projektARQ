@@ -7,15 +7,7 @@ from repo.system.Enums import *
 from repo.system.Setup import *
 from datetime import datetime
 from repo.system.ParametersAndOutput import SimulationEncoder
-
-
-def listMessageBox(arr, parent):
-    window = tk.Toplevel(master=parent)
-    listbox = tk.Listbox(window)
-    listbox.pack(fill=tk.BOTH, expand=1)  # adds listbox to window
-    [listbox.insert(tk.END, row) for row in arr]  # one line for loop
-    window.grab_set()
-
+import ctypes  # An included library with Python install.
 
 arr = ['a', 'b', 'c', '1', '2', '3']
 
@@ -99,6 +91,8 @@ class Main:
     def changeParameters(self):
         paramWindow = ParametersChanger(self.parameters)
         paramWindow.run()
+        self.parameters.totalLength = self.parameters.encoding['totalLength']
+        self.parameters.packetLength = self.parameters.encoding['packetLength']
         saveObjectToJson(self.parameters, 'params.json')
 
 
@@ -123,14 +117,14 @@ class ParametersChanger:
         self.encText = tk.Text(master=encodingFrame)
         self.encText.pack(side=tk.TOP)
         self.update(self.encText, self.parameters.encoding)
-        tk.Button(master=encodingFrame, text='Change encoding', command=self.changeChannel).pack(side=tk.BOTTOM)
+        tk.Button(master=encodingFrame, text='Change encoding').pack(side=tk.BOTTOM)
         channelFrame = tk.Frame(master=mainFrame)
         channelFrame.pack(side=tk.RIGHT)
         tk.Label(master=channelFrame, text='Channel model').pack(side=tk.TOP)
         self.chText = tk.Text(master=channelFrame)
         self.chText.pack(side=tk.TOP)
         self.update(self.chText, self.parameters.noiseModel)
-        tk.Button(master=channelFrame, text='Change channel').pack(side=tk.BOTTOM)
+        tk.Button(master=channelFrame, text='Change channel', command=self.changeChannel).pack(side=tk.BOTTOM)
         return window
 
     def changeChannel(self):
@@ -151,9 +145,20 @@ class ChannelWizard:
 
     def run(self):
         self.chooseType()
-        if not self.channel['type'] == 'TWO_STATE':
+        if self.channel['type'] == 'TWO_STATE':
+            self.chooseInt("1 to 2", "Input probability of changing state from 1 to 2 in %:",
+                           'firstToSecondProbability')
+            self.chooseInt("2 to 1", "Input probability of changing state from 2 to 1 in %:",
+                           'secondToFirstProbability')
+            ctypes.windll.user32.MessageBoxW(0, "Now proceed with setting inner channel 1", "State 1", 0)
+            innerChannel = ChannelWizard(self.master).run()
+            self.channel.update({'firstChannel': innerChannel})
+            ctypes.windll.user32.MessageBoxW(0, "Now proceed with setting inner channel 2", "State 2", 0)
+            innerChannel = ChannelWizard(self.master).run()
+            self.channel.update({'secondChannel': innerChannel})
+        else:
             self.chooseBer()
-            return self.channel
+        return self.channel
 
     def chooseType(self):
         dialog = tk.Toplevel(master=self.master)
@@ -170,10 +175,13 @@ class ChannelWizard:
         dialog.wait_window()
 
     def chooseBer(self):
-        dialog = tk.Toplevel(master=self.master)
-        dialog.title("BER")
+        self.chooseInt("BER", "Input BER in %:", 'BER')
 
-        label = tk.Label(master=dialog, text="Input BER in %:")
+    def chooseInt(self, title, label, key):
+        dialog = tk.Toplevel(master=self.master)
+        dialog.title(title)
+
+        label = tk.Label(master=dialog, text=label)
         label.pack(side=tk.TOP)
 
         intVar: IntVar = tk.IntVar()
@@ -182,7 +190,7 @@ class ChannelWizard:
         textBox = tk.Entry(master=dialog, textvariable=intVar)
         textBox.pack(side=tk.TOP)
 
-        okButt = tk.Button(master=dialog, text="OK", command=lambda: self.closeDialog({'BER': intVar.get()}, dialog))
+        okButt = tk.Button(master=dialog, text="OK", command=lambda: self.closeDialog({key: intVar.get()}, dialog))
         okButt.pack(side=tk.BOTTOM)
 
         dialog.grab_set()
