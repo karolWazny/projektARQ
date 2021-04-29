@@ -1,6 +1,7 @@
 import copy
 import tkinter as tk
 from tkinter import IntVar
+from tokenize import String
 
 from repo.system.ParametersAndOutput import *
 from repo.system.Enums import *
@@ -12,6 +13,7 @@ import ctypes  # An included library with Python install.
 
 def packetLengthWithNParityBits(parityBits):
     return 2 ** parityBits - parityBits - 1
+
 
 # klasa przekazana w ręce Karola
 class UserInteraction:
@@ -224,7 +226,7 @@ class EncodingWizard(Wizard):
             self.diction.update({'packetLength': packetLengthWithNParityBits(self.diction['parityBits'])})
         elif self.diction['type'] == 'CRC':
             self.choosePacketLength()
-            pass
+            self.chooseEncodingKey()
         return self.diction
 
     def chooseTotalLength(self):
@@ -235,3 +237,29 @@ class EncodingWizard(Wizard):
 
     def chooseParityBits(self):
         self.chooseInt("Parity bits", "Input the number of redundancy bits in one packet:", 'parityBits')
+
+    def chooseEncodingKey(self):
+        dialog = tk.Toplevel(master=self.master)
+        dialog.title('Key')
+
+        label = tk.Label(master=dialog,
+                         text='Input your desired wielomian from oldest to youngest bits separated with commas')
+        label.pack(side=tk.TOP)
+
+        strVar = tk.StringVar()
+
+        textBox = tk.Entry(master=dialog, textvariable=strVar)
+        textBox.pack(side=tk.TOP)
+
+        okButt = tk.Button(master=dialog, text="OK", command=lambda: self.parseArrayAndClose('key', dialog, strVar.get()))
+        okButt.pack(side=tk.BOTTOM)
+
+        dialog.grab_set()
+        dialog.wait_window()
+
+    def parseArrayAndClose(self, key, dialog, stringToParse):
+        arr = stringToParse.split(',')
+        out = []
+        for element in arr:
+            out.append(int(element))
+        self.closeDialog({key:out}, dialog)

@@ -23,11 +23,11 @@ class ParityEncoderTest(unittest.TestCase):
 
 class CRCEncoderTest(unittest.TestCase):
     def test_encode1(self):
-        results = CRCEncoder([1, 0, 1, 1]).encode([1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1])
+        results = CRCEncoder([1, 0, 1, 1]).encode(Packet.fromList([1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1]))
         self.assertTrue(results == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0])
 
     def test_encode2(self):
-        results = CRCEncoder([1, 0, 1, 1]).encode([1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0])
+        results = CRCEncoder([1, 0, 1, 1]).encode(Packet.fromList([1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0]))
         self.assertTrue(results == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0])
 
 
