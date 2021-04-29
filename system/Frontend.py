@@ -199,3 +199,9 @@ class ChannelWizard:
     def closeDialog(self, diction, dialog):
         self.channel.update(diction)
         dialog.destroy()
+
+
+class EncodingWizard:
+    def __init__(self, master):
+        self.master = master
+        self.channel = dict()
