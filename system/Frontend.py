@@ -122,16 +122,14 @@ class ParametersChanger:
         tk.Label(master=encodingFrame, text='Encoding model').pack(side=tk.TOP)
         self.encText = tk.Text(master=encodingFrame)
         self.encText.pack(side=tk.TOP)
-        self.encText.insert(tk.INSERT, json.dumps(self.parameters.encoding, indent=2, cls=SimulationEncoder))
-        self.encText.configure(state=tk.DISABLED)
+        self.update(self.encText, self.parameters.encoding)
         tk.Button(master=encodingFrame, text='Change encoding', command=self.changeChannel).pack(side=tk.BOTTOM)
         channelFrame = tk.Frame(master=mainFrame)
         channelFrame.pack(side=tk.RIGHT)
         tk.Label(master=channelFrame, text='Channel model').pack(side=tk.TOP)
         self.chText = tk.Text(master=channelFrame)
         self.chText.pack(side=tk.TOP)
-        self.chText.insert(tk.INSERT, json.dumps(self.parameters.noiseModel, indent=2, cls=SimulationEncoder))
-        self.chText.configure(state=tk.DISABLED)
+        self.update(self.chText, self.parameters.noiseModel)
         tk.Button(master=channelFrame, text='Change channel').pack(side=tk.BOTTOM)
         return window
 
