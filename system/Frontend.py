@@ -9,8 +9,9 @@ from datetime import datetime
 from repo.system.ParametersAndOutput import SimulationEncoder
 import ctypes  # An included library with Python install.
 
-arr = ['a', 'b', 'c', '1', '2', '3']
 
+def packetLengthWithNParityBits(parityBits):
+    return 2 ** parityBits - parityBits - 1
 
 # klasa przekazana w ręce Karola
 class UserInteraction:
@@ -91,8 +92,6 @@ class Main:
     def changeParameters(self):
         paramWindow = ParametersChanger(self.parameters)
         paramWindow.run()
-        self.parameters.totalLength = self.parameters.encoding['totalLength']
-        self.parameters.packetLength = self.parameters.encoding['packetLength']
         saveObjectToJson(self.parameters, 'params.json')
 
 
@@ -117,7 +116,7 @@ class ParametersChanger:
         self.encText = tk.Text(master=encodingFrame)
         self.encText.pack(side=tk.TOP)
         self.update(self.encText, self.parameters.encoding)
-        tk.Button(master=encodingFrame, text='Change encoding').pack(side=tk.BOTTOM)
+        tk.Button(master=encodingFrame, text='Change encoding', command=self.changeEncoding).pack(side=tk.BOTTOM)
         channelFrame = tk.Frame(master=mainFrame)
         channelFrame.pack(side=tk.RIGHT)
         tk.Label(master=channelFrame, text='Channel model').pack(side=tk.TOP)
@@ -131,6 +130,12 @@ class ParametersChanger:
         self.parameters.noiseModel = ChannelWizard(self.window).run()
         self.update(self.chText, self.parameters.noiseModel)
 
+    def changeEncoding(self):
+        self.parameters.encoding = EncodingWizard(self.window).run()
+        self.parameters.totalLength = self.parameters.encoding['totalLength']
+        self.parameters.packetLength = self.parameters.encoding['packetLength']
+        self.update(self.encText, self.parameters.encoding)
+
     def update(self, textField, textSource):
         textField.configure(state=tk.NORMAL)
         textField.delete(1.0, tk.END)
@@ -138,44 +143,10 @@ class ParametersChanger:
         textField.configure(state=tk.DISABLED)
 
 
-class ChannelWizard:
+class Wizard:
     def __init__(self, master):
+        self.diction = dict()
         self.master = master
-        self.channel = dict()
-
-    def run(self):
-        self.chooseType()
-        if self.channel['type'] == 'TWO_STATE':
-            self.chooseInt("1 to 2", "Input probability of changing state from 1 to 2 in %:",
-                           'firstToSecondProbability')
-            self.chooseInt("2 to 1", "Input probability of changing state from 2 to 1 in %:",
-                           'secondToFirstProbability')
-            ctypes.windll.user32.MessageBoxW(0, "Now proceed with setting inner channel 1", "State 1", 0)
-            innerChannel = ChannelWizard(self.master).run()
-            self.channel.update({'firstChannel': innerChannel})
-            ctypes.windll.user32.MessageBoxW(0, "Now proceed with setting inner channel 2", "State 2", 0)
-            innerChannel = ChannelWizard(self.master).run()
-            self.channel.update({'secondChannel': innerChannel})
-        else:
-            self.chooseBer()
-        return self.channel
-
-    def chooseType(self):
-        dialog = tk.Toplevel(master=self.master)
-        dialog.title("Channel type")
-        options = ["BINARY_SYMMETRIC", "BINARY_ERASURE", "Z_CHANNEL", "TWO_STATE"]
-        strVar = tk.StringVar()
-        strVar.set(options[0])
-        optionMenu = tk.OptionMenu(dialog, strVar, *options)
-        optionMenu.pack(side=tk.TOP)
-
-        okButt = tk.Button(master=dialog, text="OK", command=lambda: self.closeDialog({'type': strVar.get()}, dialog))
-        okButt.pack(side=tk.BOTTOM)
-        dialog.grab_set()
-        dialog.wait_window()
-
-    def chooseBer(self):
-        self.chooseInt("BER", "Input BER in %:", 'BER')
 
     def chooseInt(self, title, label, key):
         dialog = tk.Toplevel(master=self.master)
@@ -197,11 +168,70 @@ class ChannelWizard:
         dialog.wait_window()
 
     def closeDialog(self, diction, dialog):
-        self.channel.update(diction)
+        self.diction.update(diction)
         dialog.destroy()
 
+    def chooseType(self, options):
+        dialog = tk.Toplevel(master=self.master)
+        dialog.title("Channel type")
+        strVar = tk.StringVar()
+        strVar.set(options[0])
+        optionMenu = tk.OptionMenu(dialog, strVar, *options)
+        optionMenu.pack(side=tk.TOP)
 
-class EncodingWizard:
+        okButt = tk.Button(master=dialog, text="OK", command=lambda: self.closeDialog({'type': strVar.get()}, dialog))
+        okButt.pack(side=tk.BOTTOM)
+        dialog.grab_set()
+        dialog.wait_window()
+
+
+class ChannelWizard(Wizard):
     def __init__(self, master):
-        self.master = master
-        self.channel = dict()
+        super().__init__(master)
+
+    def run(self):
+        self.chooseType(["BINARY_SYMMETRIC", "BINARY_ERASURE", "Z_CHANNEL", "TWO_STATE"])
+        if self.diction['type'] == 'TWO_STATE':
+            self.chooseInt("1 to 2", "Input probability of changing state from 1 to 2 in %:",
+                           'firstToSecondProbability')
+            self.chooseInt("2 to 1", "Input probability of changing state from 2 to 1 in %:",
+                           'secondToFirstProbability')
+            ctypes.windll.user32.MessageBoxW(0, "Now proceed with setting inner channel 1", "State 1", 0)
+            innerChannel = ChannelWizard(self.master).run()
+            self.diction.update({'firstChannel': innerChannel})
+            ctypes.windll.user32.MessageBoxW(0, "Now proceed with setting inner channel 2", "State 2", 0)
+            innerChannel = ChannelWizard(self.master).run()
+            self.diction.update({'secondChannel': innerChannel})
+        else:
+            self.chooseBer()
+        return self.diction
+
+    def chooseBer(self):
+        self.chooseInt("BER", "Input BER in %:", 'BER')
+
+
+class EncodingWizard(Wizard):
+    def __init__(self, master):
+        super().__init__(master)
+
+    def run(self):
+        self.chooseTotalLength()
+        self.chooseType(['PARITY', 'HAMMING', 'CRC'])
+        if self.diction['type'] == 'PARITY':
+            self.choosePacketLength()
+        elif self.diction['type'] == 'HAMMING':
+            self.chooseParityBits()
+            self.diction.update({'packetLength': packetLengthWithNParityBits(self.diction['parityBits'])})
+        elif self.diction['type'] == 'CRC':
+            self.choosePacketLength()
+            pass
+        return self.diction
+
+    def chooseTotalLength(self):
+        self.chooseInt("Total length", "Input total number of bits to be sent:", 'totalLength')
+
+    def choosePacketLength(self):
+        self.chooseInt("Packet length", "Input the number of bits in one packet before encoding:", 'packetLength')
+
+    def chooseParityBits(self):
+        self.chooseInt("Parity bits", "Input the number of redundancy bits in one packet:", 'parityBits')

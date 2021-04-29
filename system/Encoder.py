@@ -54,7 +54,10 @@ class HammingEncoder(Encoder):
         self.gMatrix = matrixBuilder.buildGMatrix()
 
     def encode(self, packet):
-        return Packet.fromList(numpy.dot(packet.content(), self.gMatrix))
+        content = numpy.dot(packet.content(), self.gMatrix)
+        for index in range(0, len(content)):
+            content[index] = content[index] % 2
+        return Packet.fromList(content)
 
 
 class ParityEncoder(Encoder):
