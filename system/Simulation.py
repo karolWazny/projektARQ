@@ -22,6 +22,9 @@ class Simulation:
                 receivedPacket = self.receiver.receive(distortedPacket)
                 if receivedPacket is None:
                     self.simulationLog.output.retransmissions += 1
+                    packet.distorted()
+                if packet.retransmissions() >= 100:
+                    raise Exception
             if receivedPacket != packet:
                 self.simulationLog.output.errorsUndetected += 1
         self.simulationLog.output.errorsTotal = self.simulationLog.output.errorsUndetected + self.simulationLog.output.retransmissions
