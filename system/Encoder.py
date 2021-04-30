@@ -36,7 +36,7 @@ def div(divident, divisor):
         else:
             cDivident += 1
 
-    return divident[(len(divident)-len(divisor))+1:]
+    return divident
 
 
 class Encoder:
@@ -79,8 +79,7 @@ class CRCEncoder(Encoder):
         super().__init__()
 
     def encode(self, packet):
-        tmp = copy.deepcopy(packet.content())
+        tmp = copy.deepcopy(packet)
         tmp = CRCKey(tmp, self.key)
         tmp = div(tmp.content(), self.key)
-        tmp = packet+tmp
         return Packet.fromList(tmp)
