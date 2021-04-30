@@ -1,12 +1,12 @@
 import numpy
 
-from system.Packet import Packet
+from .Packet import Packet
 import copy
 
 
 def CRCKey(packet, key):
     for i in range(len(key) - 1):
-        packet.add(0)
+        packet.append(0)
     return packet
 
 
@@ -81,6 +81,6 @@ class CRCEncoder(Encoder):
     def encode(self, packet):
         tmp = copy.deepcopy(packet.content())
         tmp = CRCKey(tmp, self.key)
-        tmp = div(tmp.content(), self.key)
-        tmp = packet+tmp
+        tmp = div(tmp, self.key)
+        tmp = packet.content()+tmp
         return Packet.fromList(tmp)

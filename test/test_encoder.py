@@ -1,5 +1,4 @@
 import unittest
-from system.Encoder import *
 from system.Decoder import *
 
 

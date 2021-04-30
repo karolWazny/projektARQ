@@ -1,6 +1,6 @@
 import unittest
 from system.Channel import Channel, BinarySymmetricChannel, BinaryErasureChannel, ZChannel
-from system.Random import Randomizer, RandomizerImpl
+from system.Random import RandomizerImpl
 from system.Packet import Packet
 
 

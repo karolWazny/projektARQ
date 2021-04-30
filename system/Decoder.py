@@ -1,8 +1,8 @@
 import copy
 import numpy as np
 
-from system.Encoder import HammingEncoder, ParityEncoder, CRCEncoder
-from system.Packet import Packet
+from .Encoder import HammingEncoder, ParityEncoder, CRCEncoder
+from .Packet import Packet
 
 
 def xor(a, b):
