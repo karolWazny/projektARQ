@@ -1,5 +1,4 @@
 import random
-from system.Encoder import div
 
 
 class Generator:

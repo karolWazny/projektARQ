@@ -1,4 +1,4 @@
-from system.Packet import Packet
+from .Packet import Packet
 
 
 class Transmitter:
@@ -20,5 +20,5 @@ class Transmitter:
         if packet.length() > 0:
             while packet.length() < packetSize:
                 packet.add(0)
-            packetList.append(packet.content())
+            packetList.append(packet)
         return packetList

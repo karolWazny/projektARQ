@@ -1,8 +1,8 @@
 import copy
 import numpy as np
 
-from system.Encoder import HammingEncoder, ParityEncoder, CRCEncoder
-from system.Packet import Packet
+from .Encoder import HammingEncoder, ParityEncoder, CRCEncoder
+from .Packet import Packet
 
 
 def xor(a, b):
@@ -100,7 +100,8 @@ class CRCDecoder(Decoder):
         return self.checkForErrors()
 
     def checkForErrors(self):
-        decodedPacket = div(copy.deepcopy(self.currentFrame.content()), self.key)
+        tmp = copy.deepcopy(self.currentFrame.content())
+        decodedPacket = div(tmp, self.key)
         if sum(decodedPacket) == 0:
             return Packet.fromList(self.currentFrame.content()[:-len(self.key)+1])
         else:

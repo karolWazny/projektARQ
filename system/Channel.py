@@ -1,6 +1,6 @@
-from system.Enums import Noise
-from system.Packet import Packet
-from system.Random import RandomizerImpl
+from .Enums import Noise
+from .Packet import Packet
+from .Random import RandomizerImpl
 
 
 class Channel:
