@@ -1,6 +1,6 @@
 import unittest
 
-from ..system.Packet import Packet
+from system.Packet import Packet
 
 
 class PacketTest(unittest.TestCase):

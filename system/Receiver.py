@@ -1,4 +1,4 @@
-from repo.system.Decoder import DecoderException
+from system.Decoder import DecoderException
 
 
 class Receiver:

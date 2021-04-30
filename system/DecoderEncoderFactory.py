@@ -1,5 +1,5 @@
-from repo.system.Enums import Encoding
-from repo.system.Decoder import ParityFactory, CRCFactory, HammingFactory
+from system.Enums import Encoding
+from system.Decoder import ParityFactory, CRCFactory, HammingFactory
 
 
 class EncoderFactory:

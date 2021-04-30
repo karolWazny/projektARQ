@@ -1,5 +1,5 @@
 import unittest
-from ..system.Receiver import *
+from system.Receiver import *
 
 class ReceiverTest(unittest.TestCase):
     def test_decodeData(self):

@@ -1,4 +1,4 @@
-from ..system.Enums import *
+from system.Enums import *
 import unittest
 
 

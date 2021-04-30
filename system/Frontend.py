@@ -3,11 +3,11 @@ import tkinter as tk
 from tkinter import IntVar
 from tokenize import String
 
-from repo.system.ParametersAndOutput import *
-from repo.system.Enums import *
-from repo.system.Setup import *
+from system.ParametersAndOutput import *
+from system.Enums import *
+from system.Setup import *
 from datetime import datetime
-from repo.system.ParametersAndOutput import SimulationEncoder
+from system.ParametersAndOutput import SimulationEncoder
 import ctypes  # An included library with Python install.
 
 

@@ -1,7 +1,7 @@
 import unittest
-from ..system.Receiver import Receiver
-from ..system.Decoder import Decoder, ParityDecoder
-from ..system.Packet import Packet
+from system.Receiver import Receiver
+from system.Decoder import Decoder, ParityDecoder
+from system.Packet import Packet
 
 
 class ReceiverTest(unittest.TestCase):

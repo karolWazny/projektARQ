@@ -1,7 +1,7 @@
 import unittest
 
-from repo.system.Packet import Packet
-from ..system.Transmitter import Transmitter
+from system.Packet import Packet
+from system.Transmitter import Transmitter
 
 
 class TransmitterTestDiv(unittest.TestCase):

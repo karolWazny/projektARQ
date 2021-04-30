@@ -1,5 +1,5 @@
 import random
-from repo.system.Encoder import div
+from system.Encoder import div
 
 
 class Generator:

@@ -1,4 +1,4 @@
-from repo.system.Packet import Packet
+from system.Packet import Packet
 
 
 class Transmitter:

@@ -1,6 +1,6 @@
 import unittest
-from ..system.Encoder import *
-from repo.system.Decoder import *
+from system.Encoder import *
+from system.Decoder import *
 
 
 class ParityEncoderTest(unittest.TestCase):

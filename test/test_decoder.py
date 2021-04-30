@@ -1,6 +1,6 @@
 import unittest
-from ..system.Decoder import *
-from ..system.Encoder import *
+from system.Decoder import *
+from system.Encoder import *
 
 
 class DecoderTest(unittest.TestCase):

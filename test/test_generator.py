@@ -1,6 +1,6 @@
 import unittest
 
-from ..system.Generator import Generator
+from system.Generator import Generator
 
 
 class GeneratorTest(unittest.TestCase):

@@ -1,7 +1,7 @@
-from repo.system.Transmitter import Transmitter
-from repo.system.Receiver import Receiver
-from repo.system.Enums import Encoding
-from repo.system.Decoder import ParityFactory, CRCFactory, HammingFactory
+from system.Transmitter import Transmitter
+from system.Receiver import Receiver
+from system.Enums import Encoding
+from system.Decoder import ParityFactory, CRCFactory, HammingFactory
 
 
 class TransmitterReceiverFactory:

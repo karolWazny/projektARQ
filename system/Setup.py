@@ -1,7 +1,7 @@
-from repo.system.Generator import Generator
-from repo.system.Simulation import Simulation
-from repo.system.TransmitterReceiverFactory import TransmitterReceiverFactory
-from repo.system.Channel import AllChannelFactory
+from system.Generator import Generator
+from system.Simulation import Simulation
+from system.TransmitterReceiverFactory import TransmitterReceiverFactory
+from system.Channel import AllChannelFactory
 
 
 class Setup:
