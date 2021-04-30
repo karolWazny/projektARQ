@@ -13,6 +13,21 @@ def packetLengthWithNParityBits(parityBits):
     return 2 ** parityBits - parityBits - 1
 
 
+def centerDialog(window):
+    window.resizable(False, False)  # This code helps to disable windows from resizing
+
+    window_height = 70
+    window_width = 300
+
+    screen_width = window.winfo_screenwidth()
+    screen_height = window.winfo_screenheight()
+
+    x_cordinate = int((screen_width / 2) - (window_width / 2))
+    y_cordinate = int((screen_height / 2) - (window_height / 2))
+
+    window.geometry("{}x{}+{}+{}".format(window_width, window_height, x_cordinate, y_cordinate))
+
+
 class Main:
     def __init__(self):
         self.window = self.prepareWindow()
@@ -134,6 +149,8 @@ class Wizard:
         okButt = tk.Button(master=dialog, text="OK", command=lambda: self.closeDialog({key: intVar.get()}, dialog))
         okButt.pack(side=tk.BOTTOM)
 
+        centerDialog(dialog)
+
         dialog.grab_set()
         dialog.wait_window()
 
@@ -151,6 +168,8 @@ class Wizard:
 
         okButt = tk.Button(master=dialog, text="OK", command=lambda: self.closeDialog({'type': strVar.get()}, dialog))
         okButt.pack(side=tk.BOTTOM)
+
+        centerDialog(dialog)
         dialog.grab_set()
         dialog.wait_window()
 
@@ -211,7 +230,7 @@ class EncodingWizard(Wizard):
         dialog.title('Key')
 
         label = tk.Label(master=dialog,
-                         text='Input your desired polynomial from oldest to youngest bits separated with commas')
+                         text='Polynomial (oldest to youngest separated with ",":')
         label.pack(side=tk.TOP)
 
         strVar = tk.StringVar()
@@ -219,9 +238,11 @@ class EncodingWizard(Wizard):
         textBox = tk.Entry(master=dialog, textvariable=strVar)
         textBox.pack(side=tk.TOP)
 
-        okButt = tk.Button(master=dialog, text="OK", command=lambda: self.parseArrayAndClose('key', dialog, strVar.get()))
+        okButt = tk.Button(master=dialog, text="OK",
+                           command=lambda: self.parseArrayAndClose('key', dialog, strVar.get()))
         okButt.pack(side=tk.BOTTOM)
 
+        centerDialog(dialog)
         dialog.grab_set()
         dialog.wait_window()
 
@@ -230,4 +251,4 @@ class EncodingWizard(Wizard):
         out = []
         for element in arr:
             out.append(int(element))
-        self.closeDialog({key:out}, dialog)
+        self.closeDialog({key: out}, dialog)
