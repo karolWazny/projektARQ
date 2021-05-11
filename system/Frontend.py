@@ -39,6 +39,8 @@ class Main:
         runButt.pack()
         paramButt = tk.Button(window, text="Change Parameters", command=self.changeParameters)
         paramButt.pack()
+        manyButt = tk.Button(window, text="Run in a series", command=self.runSeries)
+        manyButt.pack()
         window.geometry("250x100")
         return window
 
@@ -78,6 +80,26 @@ class Main:
         paramWindow = ParametersChanger(self.parameters)
         paramWindow.run()
         saveObjectToJson(self.parameters, 'params.json')
+
+    def runSeries(self):
+        log = SimulationLog()
+        log.params = self.parameters
+        log.output = []
+        tmpLog = SimulationLog()
+        tmpLog.params = self.parameters
+        setup = Setup(tmpLog)
+        simulation = setup.getSimulation()
+        filename = self.generateCurrentTimeString()
+        for index in range(0, 10000):
+            simulation.simulate()
+            log.output.append(tmpLog.output)
+            simulation.reset()
+        saveObjectToJson(log, filename)
+
+    @staticmethod
+    def generateCurrentTimeString():
+        now = datetime.now()
+        return now.strftime("%Y-%m-%d-%H%M%S")
 
 
 class ParametersChanger:
