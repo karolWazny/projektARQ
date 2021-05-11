@@ -1,7 +1,6 @@
 class Packet:
     def __init__(self):
         self.__content = []
-        self.retransmissions = 0
 
     def add(self, bit):
         self.__content.append(bit)
@@ -14,12 +13,6 @@ class Packet:
 
     def clear(self):
         return self.__content.clear()
-
-    def retransmissions(self):
-        return self.retransmissions
-
-    def distorted(self):
-        self.retransmissions += 1
 
     def __eq__(self, other):
         if isinstance(other, list):
