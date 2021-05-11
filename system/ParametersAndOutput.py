@@ -32,10 +32,10 @@ class SimulationParameters:
 
 class SimulationOutput:
     def __init__(self):
-        self.transmissionsTotal = None
-        self.retransmissions = None
-        self.errorsTotal = None
-        self.errorsUndetected = None
+        self.transmissionsTotal = 0
+        self.retransmissions = 0
+        self.errorsTotal = 0
+        self.errorsUndetected = 0
 
     @staticmethod
     def fromDictionary(dictionary):
