@@ -9,29 +9,66 @@ class Avg:
         self.avgRetransmissions = 0
         self.avgErrorsTotal = 0
         self.avgErrorsUndetected = 0
+        self.simulationLog = simulationLog
+        self.transmissionsTotal = []
+        self.retransmissions = []
+        self.errorsTotal = []
+        self.errorsUndetected = []
 
     def calculate(self):
-        transmissionsTotal = []
-        retransmissions = []
-        errorsTotal = []
-        errorsUndetected = []
         for output in self.simulationLog.output:
-            transmissionsTotal.append(output.transmissionsTotal)
-            retransmissions.append(output.retransmissions)
-            errorsTotal.append(output.errorsTotal)
-            errorsUndetected.append(output.errorsUndetected)
-        self.avgTransmissionsTotal = mean(transmissionsTotal)
-        self.avgRetransmissions = mean(retransmissions)
-        self.avgErrorsTotal = mean(errorsTotal)
-        self.avgErrorsUndetected = mean(errorsUndetected)
+            self.transmissionsTotal.append(output.transmissionsTotal)
+            self.retransmissions.append(output.retransmissions)
+            self.errorsTotal.append(output.errorsTotal)
+            self.errorsUndetected.append(output.errorsUndetected)
+        self.avgTransmissionsTotal = mean(self.transmissionsTotal)
+        self.avgRetransmissions = mean(self.retransmissions)
+        self.avgErrorsTotal = mean(self.errorsTotal)
+        self.avgErrorsUndetected = mean(self.errorsUndetected)
 
     def showGraph(self):
-        x = ["Liczba transmisji", "Liczba retransmisji", "Niewykryte błędy", "Wszystkie błędy"]
+        x = ["L. transmisji", "L. retransmisji", "Niewykryte błędy", "Wszystkie błędy"]
         y = [self.avgTransmissionsTotal, self.avgRetransmissions, self.avgErrorsUndetected, self.avgErrorsTotal]
+        plt.subplot(2, 1, 1)
         plt.bar(x, y)
+        plt.title("ŚREDNIA ARYTMETYCZNA " + str(len(self.simulationLog.output)) + " PRÓB")
+        plt.subplot(2, 1, 2)
+        plt.pie(y, labels=x, startangle=90)
         plt.show()
 
 
+class Histogram:
+    def __init__(self, simulationLog):
+        self.simulationLog = simulationLog
+        self.transmissionsTotal = []
+        self.retransmissions = []
+        self.errorsTotal = []
+        self.errorsUndetected = []
+
+    def calculate(self):
+        for output in self.simulationLog.output:
+            self.transmissionsTotal.append(output.transmissionsTotal)
+            self.retransmissions.append(output.retransmissions)
+            self.errorsTotal.append(output.errorsTotal)
+            self.errorsUndetected.append(output.errorsUndetected)
+
+    def showGraph(self):
+        plt.subplot(2, 2, 1)
+        plt.hist(self.transmissionsTotal)
+        plt.title("L. wszystkich transmisji")
+        plt.subplot(2, 2, 2)
+        plt.hist(self.retransmissions)
+        plt.title("L. wszystkich retransmisji")
+        plt.subplot(2, 2, 3)
+        plt.hist(self.errorsUndetected)
+        plt.title("L. niewykrytych błędów")
+        plt.subplot(2, 2, 4)
+        plt.hist(self.errorsTotal)
+        plt.title("L. wszystkich błędów")
+        plt.show()
+
+
+# odtąd są testy działania statystyk
 class SimulationLogTest:
     def __init__(self):
         self.output = []
@@ -45,8 +82,9 @@ class SimulationOutputTest:
         self.errorsUndetected = 0
 
 
-class Test:
-    if __name__ == '__main__':
+class RandomOutputs:
+    @staticmethod
+    def generateRandomOutputs():
         simLog = SimulationLogTest()
         out1 = SimulationOutputTest()
         out1.transmissionsTotal = 12
@@ -76,7 +114,15 @@ class Test:
         out4.errorsTotal = 157
         simLog.output.append(out4)
 
-        avg = Avg(simLog)
+        return simLog
+
+
+class Test:
+    if __name__ == '__main__':
+        simulationLog = RandomOutputs.generateRandomOutputs()
+        avg = Avg(simulationLog)
         avg.calculate()
         avg.showGraph()
-
+        hist = Histogram(simulationLog)
+        hist.calculate()
+        hist.showGraph()
