@@ -8,6 +8,7 @@ class Simulation:
         self.transmitter = transmitter
         self.receiver = receiver
         self.simulationLog = simulationLog
+
     def simulate(self):
         signal = self.generator.generate()
         packetList = self.transmitter.divSignal(signal, self.simulationLog.params.packetLength)
