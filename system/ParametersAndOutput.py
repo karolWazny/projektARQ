@@ -32,10 +32,10 @@ class SimulationParameters:
 
 class SimulationOutput:
     def __init__(self):
-        self.transmissionsTotal = None
-        self.retransmissions = None
-        self.errorsTotal = None
-        self.errorsUndetected = None
+        self.transmissionsTotal = 0
+        self.retransmissions = 0
+        self.errorsTotal = 0
+        self.errorsUndetected = 0
 
     @staticmethod
     def fromDictionary(dictionary):
@@ -66,6 +66,26 @@ class SimulationLog:
         output = SimulationLog()
         output.params = SimulationParameters.fromDictionary(dictionary['params'])
         output.output = SimulationOutput.fromDictionary(dictionary['output'])
+        return output
+
+    def __eq__(self, other):
+        if not isinstance(other, SimulationLog):
+            return NotImplemented
+
+        return self.params == other.params and \
+               self.output == other.output
+
+class MultipleRunLog:
+    def __init__(self):
+        self.params = None
+        self.output = []
+
+    @staticmethod
+    def fromDictionary(dictionary):
+        output = MultipleRunLog()
+        output.params = SimulationParameters.fromDictionary(dictionary['params'])
+        for singleOutput in dictionary['output']:
+            output.output.append(SimulationOutput.fromDictionary(singleOutput))
         return output
 
     def __eq__(self, other):

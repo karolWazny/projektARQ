@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.filedialog
 from tkinter import IntVar
 
 from .ParametersAndOutput import *
@@ -32,6 +33,7 @@ class Main:
     def __init__(self):
         self.window = self.prepareWindow()
         self.parameters = self.obtainParameters()
+        self.output = None
 
     def prepareWindow(self):
         window = tk.Tk(className="arq simulator")  # todo wymusic zaczynanie z wielkiej litery
@@ -39,7 +41,11 @@ class Main:
         runButt.pack()
         paramButt = tk.Button(window, text="Change Parameters", command=self.changeParameters)
         paramButt.pack()
-        window.geometry("250x100")
+        manyButt = tk.Button(window, text="Run in a series", command=self.runSeries)
+        manyButt.pack()
+        fileButt = tk.Button(window, text="Choose output file", command=self.chooseFile)
+        fileButt.pack()
+        window.geometry("250x120")
         return window
 
     def run(self):
@@ -52,6 +58,10 @@ class Main:
             params = self.makeDefaultParameters()
             saveObjectToJson(params, 'params.json')
         return params
+
+    def chooseFile(self):
+        filename = tkinter.filedialog.askopenfilename()
+        self.output = readObjectFromJson(MultipleRunLog, filename)
 
     def makeDefaultParameters(self):
         params = SimulationParameters()
@@ -78,6 +88,26 @@ class Main:
         paramWindow = ParametersChanger(self.parameters)
         paramWindow.run()
         saveObjectToJson(self.parameters, 'params.json')
+
+    def runSeries(self):
+        log = SimulationLog()
+        log.params = self.parameters
+        log.output = []
+        tmpLog = SimulationLog()
+        tmpLog.params = self.parameters
+        setup = Setup(tmpLog)
+        simulation = setup.getSimulation()
+        filename = self.generateCurrentTimeString()
+        for index in range(0, 10000):
+            simulation.simulate()
+            log.output.append(tmpLog.output)
+            simulation.reset()
+        saveObjectToJson(log, filename)
+
+    @staticmethod
+    def generateCurrentTimeString():
+        now = datetime.now()
+        return now.strftime("%Y-%m-%d-%H%M%S")
 
 
 class ParametersChanger:
