@@ -1,5 +1,9 @@
 import tkinter as tk
+import tkinter.filedialog
 from tkinter import IntVar
+
+from Tools.scripts.dutree import display
+from ipyfilechooser import FileChooser
 
 from .ParametersAndOutput import *
 from .Enums import *
@@ -32,6 +36,7 @@ class Main:
     def __init__(self):
         self.window = self.prepareWindow()
         self.parameters = self.obtainParameters()
+        self.output = None
 
     def prepareWindow(self):
         window = tk.Tk(className="arq simulator")  # todo wymusic zaczynanie z wielkiej litery
@@ -41,7 +46,9 @@ class Main:
         paramButt.pack()
         manyButt = tk.Button(window, text="Run in a series", command=self.runSeries)
         manyButt.pack()
-        window.geometry("250x100")
+        fileButt = tk.Button(window, text="Choose output file", command=self.chooseFile)
+        fileButt.pack()
+        window.geometry("250x120")
         return window
 
     def run(self):
@@ -54,6 +61,10 @@ class Main:
             params = self.makeDefaultParameters()
             saveObjectToJson(params, 'params.json')
         return params
+
+    def chooseFile(self):
+        filename = tkinter.filedialog.askopenfilename()
+        self.output = readObjectFromJson(MultipleRunLog, filename)
 
     def makeDefaultParameters(self):
         params = SimulationParameters()

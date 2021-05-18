@@ -75,6 +75,26 @@ class SimulationLog:
         return self.params == other.params and \
                self.output == other.output
 
+class MultipleRunLog:
+    def __init__(self):
+        self.params = None
+        self.output = []
+
+    @staticmethod
+    def fromDictionary(dictionary):
+        output = MultipleRunLog()
+        output.params = SimulationParameters.fromDictionary(dictionary['params'])
+        for singleOutput in dictionary['output']:
+            output.output.append(SimulationOutput.fromDictionary(singleOutput))
+        return output
+
+    def __eq__(self, other):
+        if not isinstance(other, SimulationLog):
+            return NotImplemented
+
+        return self.params == other.params and \
+               self.output == other.output
+
 
 def saveObjectToJson(objectToSave, fileName):
     fileName = jsonFileNameFrom(fileName)
