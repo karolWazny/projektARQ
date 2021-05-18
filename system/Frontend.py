@@ -7,6 +7,7 @@ from .Enums import *
 from .Setup import *
 from datetime import datetime
 from .ParametersAndOutput import SimulationEncoder
+from .Statistics import *
 import ctypes
 
 
@@ -62,6 +63,8 @@ class Main:
     def chooseFile(self):
         filename = tkinter.filedialog.askopenfilename()
         self.output = readObjectFromJson(MultipleRunLog, filename)
+        fitter = ParametricFit(self.output)
+        fitter.draw()
 
     def makeDefaultParameters(self):
         params = SimulationParameters()

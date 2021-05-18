@@ -1,9 +1,43 @@
-from numpy import mean
+from numpy import mean, array
 import matplotlib.pyplot as plt
+from plotly.graph_objs import Bar, Layout
+from plotly import offline
+from scipy.optimize import curve_fit
+from scipy.stats import norm
+
+
+def normalDistrib(x, avg, s, amp):
+    return norm.pdf(x, avg, s) * amp
 
 
 class ParametricFit:
-    pass
+    def __init__(self, multipleRunLog):
+        self.log = multipleRunLog
+
+    def draw(self):
+        packetErrorRatios = []
+        for element in self.log.output:
+            packetErrorRatios.append(element.errorsTotal / element.transmissionsTotal * 1000)
+        y_values = []
+        x_values = []
+        for index in range(0, 1000, 1):
+            x_values.append(index / 1000)
+            inRange, left, right = 0, index - 25, index + 25
+            for element in packetErrorRatios:
+                inRange += (left < element) and (element < right)
+            y_values.append(inRange)
+
+        plt.plot(x_values, y_values)
+
+        popt, pcov = curve_fit(normalDistrib, x_values, y_values)
+
+        plt.plot(x_values, normalDistrib(x_values, *popt), 'r-',
+                 label='fit: avg=%5.3f, sigm=%5.3f, amp=%5.3f' % tuple(popt))
+
+        plt.xlabel('pakietowa stopa bledu')
+        plt.ylabel('liczba wystapien na 1000 symulacji')
+        plt.legend()
+        plt.show()
 
 
 class PrepareData:
