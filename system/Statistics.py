@@ -1,7 +1,5 @@
-from numpy import mean, array
+from numpy import mean
 import matplotlib.pyplot as plt
-from plotly.graph_objs import Bar, Layout
-from plotly import offline
 from scipy.optimize import curve_fit
 from scipy.stats import norm
 
