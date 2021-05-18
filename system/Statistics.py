@@ -6,68 +6,64 @@ class ParametricFit:
     pass
 
 
-class Avg:
+class PrepareData:
     def __init__(self, simulationLog):
-        self.simulationLog = simulationLog
-        self.avgTransmissionsTotal = 0
-        self.avgRetransmissions = 0
-        self.avgErrorsTotal = 0
-        self.avgErrorsUndetected = 0
         self.simulationLog = simulationLog
         self.transmissionsTotal = []
         self.retransmissions = []
         self.errorsTotal = []
         self.errorsUndetected = []
 
-    def calculate(self):
+    def makeUsefulData(self):
         for output in self.simulationLog.output:
             self.transmissionsTotal.append(output.transmissionsTotal)
             self.retransmissions.append(output.retransmissions)
             self.errorsTotal.append(output.errorsTotal)
             self.errorsUndetected.append(output.errorsUndetected)
-        self.avgTransmissionsTotal = mean(self.transmissionsTotal)
-        self.avgRetransmissions = mean(self.retransmissions)
-        self.avgErrorsTotal = mean(self.errorsTotal)
-        self.avgErrorsUndetected = mean(self.errorsUndetected)
+
+
+class Avg:
+    def __init__(self, usefulData):
+        self.usefulData = usefulData
+        self.avgTransmissionsTotal = 0
+        self.avgRetransmissions = 0
+        self.avgErrorsTotal = 0
+        self.avgErrorsUndetected = 0
+
+    def calculate(self):
+        self.avgTransmissionsTotal = mean(self.usefulData.transmissionsTotal)
+        self.avgRetransmissions = mean(self.usefulData.retransmissions)
+        self.avgErrorsTotal = mean(self.usefulData.errorsTotal)
+        self.avgErrorsUndetected = mean(self.usefulData.errorsUndetected)
 
     def showGraph(self):
         x = ["L. transmisji", "L. retransmisji", "Niewykryte błędy", "Wszystkie błędy"]
         y = [self.avgTransmissionsTotal, self.avgRetransmissions, self.avgErrorsUndetected, self.avgErrorsTotal]
         plt.subplot(2, 1, 1)
         plt.bar(x, y)
-        plt.title("ŚREDNIA ARYTMETYCZNA " + str(len(self.simulationLog.output)) + " PRÓB")
+        plt.title("ŚREDNIA ARYTMETYCZNA " + str(len(self.usefulData.simulationLog.output)) + " PRÓB")
         plt.subplot(2, 1, 2)
         plt.pie(y, labels=x, startangle=90)
         plt.show()
 
 
 class Histogram:
-    def __init__(self, simulationLog):
-        self.simulationLog = simulationLog
-        self.transmissionsTotal = []
-        self.retransmissions = []
-        self.errorsTotal = []
-        self.errorsUndetected = []
-
-    def calculate(self):
-        for output in self.simulationLog.output:
-            self.transmissionsTotal.append(output.transmissionsTotal)
-            self.retransmissions.append(output.retransmissions)
-            self.errorsTotal.append(output.errorsTotal)
-            self.errorsUndetected.append(output.errorsUndetected)
+    def __init__(self, usefulData):
+        self.usefulData = usefulData
 
     def showGraph(self):
+        plt.title("Histogram")
         plt.subplot(2, 2, 1)
-        plt.hist(self.transmissionsTotal)
+        plt.hist(self.usefulData.transmissionsTotal)
         plt.title("L. wszystkich transmisji")
         plt.subplot(2, 2, 2)
-        plt.hist(self.retransmissions)
+        plt.hist(self.usefulData.retransmissions)
         plt.title("L. wszystkich retransmisji")
         plt.subplot(2, 2, 3)
-        plt.hist(self.errorsUndetected)
+        plt.hist(self.usefulData.errorsUndetected)
         plt.title("L. niewykrytych błędów")
         plt.subplot(2, 2, 4)
-        plt.hist(self.errorsTotal)
+        plt.hist(self.usefulData.errorsTotal)
         plt.title("L. wszystkich błędów")
         plt.show()
 
@@ -121,12 +117,12 @@ class RandomOutputs:
         return simLog
 
 
-class Test:
-    if __name__ == '__main__':
-        simulationLog = RandomOutputs.generateRandomOutputs()
-        avg = Avg(simulationLog)
-        avg.calculate()
-        avg.showGraph()
-        hist = Histogram(simulationLog)
-        hist.calculate()
-        hist.showGraph()
+if __name__ == '__main__':
+    simulationLog = RandomOutputs.generateRandomOutputs()
+    preparedLists = PrepareData(simulationLog)
+    preparedLists.makeUsefulData()
+    avg = Avg(preparedLists)
+    avg.calculate()
+    avg.showGraph()
+    hist = Histogram(preparedLists)
+    hist.showGraph()
