@@ -2,6 +2,10 @@ from numpy import mean
 import matplotlib.pyplot as plt
 
 
+class ParametricFit:
+    pass
+
+
 class Avg:
     def __init__(self, simulationLog):
         self.simulationLog = simulationLog

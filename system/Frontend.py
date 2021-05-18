@@ -2,9 +2,6 @@ import tkinter as tk
 import tkinter.filedialog
 from tkinter import IntVar
 
-from Tools.scripts.dutree import display
-from ipyfilechooser import FileChooser
-
 from .ParametersAndOutput import *
 from .Enums import *
 from .Setup import *
