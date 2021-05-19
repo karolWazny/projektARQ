@@ -39,15 +39,15 @@ class ParametricFit:
 
 
 class PrepareData:
-    def __init__(self, simulationLog):
-        self.simulationLog = simulationLog
+    def __init__(self, multipleRunLog):
+        self.multipleRunLog = multipleRunLog
         self.transmissionsTotal = []
         self.retransmissions = []
         self.errorsTotal = []
         self.errorsUndetected = []
 
     def makeUsefulData(self):
-        for output in self.simulationLog.output:
+        for output in self.multipleRunLog.output:
             self.transmissionsTotal.append(output.transmissionsTotal)
             self.retransmissions.append(output.retransmissions)
             self.errorsTotal.append(output.errorsTotal)
@@ -71,9 +71,13 @@ class Avg:
     def showGraph(self):
         x = ["L. transmisji", "L. retransmisji", "Niewykryte błędy", "Wszystkie błędy"]
         y = [self.avgTransmissionsTotal, self.avgRetransmissions, self.avgErrorsUndetected, self.avgErrorsTotal]
+        plt.figtext(0, 0, ' dlugosc sygnalu = ' + str(self.usefulData.multipleRunLog.params.totalLength) +
+                 '\n dlugosc pakietu = ' + str(self.usefulData.multipleRunLog.params.packetLength) +
+                 '\n rodzaj zaszumiania = ' + str(self.usefulData.multipleRunLog.params.noiseModel) +
+                 '\n rodzaj kodowania = ' + str(self.usefulData.multipleRunLog.params.encoding))
         plt.subplot(2, 1, 1)
         plt.bar(x, y)
-        plt.title("ŚREDNIA ARYTMETYCZNA " + str(len(self.usefulData.simulationLog.output)) + " PRÓB")
+        plt.title("ŚREDNIA ARYTMETYCZNA " + str(len(self.usefulData.multipleRunLog.output)) + " PRÓB")
         plt.subplot(2, 1, 2)
         plt.pie(y, labels=x, startangle=90)
         plt.show()
@@ -84,7 +88,11 @@ class Histogram:
         self.usefulData = usefulData
 
     def showGraph(self):
-        plt.title("Histogram")
+        plt.suptitle("Histogram")
+        plt.figtext(0, 0, ' dlugosc sygnalu = ' + str(self.usefulData.multipleRunLog.params.totalLength) +
+                 '\n dlugosc pakietu = ' + str(self.usefulData.multipleRunLog.params.packetLength) +
+                 '\n rodzaj zaszumiania = ' + str(self.usefulData.multipleRunLog.params.noiseModel) +
+                 '\n rodzaj kodowania = ' + str(self.usefulData.multipleRunLog.params.encoding))
         plt.subplot(2, 2, 1)
         plt.hist(self.usefulData.transmissionsTotal)
         plt.title("L. wszystkich transmisji")
@@ -101,9 +109,18 @@ class Histogram:
 
 
 # odtąd są testy działania statystyk
-class SimulationLogTest:
+class MultipleRunLogTest:
     def __init__(self):
         self.output = []
+        self.params = SimulationParametersTest()
+
+
+class SimulationParametersTest:
+    def __init__(self):  # tylko do sprawdzenia czy się wyświetlają te wartości na wykresach
+        self.totalLength = 125
+        self.packetLength = 8
+        self.noiseModel = "BINARY_SIMETRIC"
+        self.encoding = "PARITY"
 
 
 class SimulationOutputTest:
@@ -117,7 +134,7 @@ class SimulationOutputTest:
 class RandomOutputs:
     @staticmethod
     def generateRandomOutputs():
-        simLog = SimulationLogTest()
+        simLog = MultipleRunLogTest()
         out1 = SimulationOutputTest()
         out1.transmissionsTotal = 12
         out1.retransmissions = 7
@@ -150,8 +167,8 @@ class RandomOutputs:
 
 
 if __name__ == '__main__':
-    simulationLog = RandomOutputs.generateRandomOutputs()
-    preparedLists = PrepareData(simulationLog)
+    multipleRunLog = RandomOutputs.generateRandomOutputs()
+    preparedLists = PrepareData(multipleRunLog)
     preparedLists.makeUsefulData()
     avg = Avg(preparedLists)
     avg.calculate()
