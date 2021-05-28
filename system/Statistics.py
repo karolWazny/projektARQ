@@ -18,15 +18,15 @@ class ParametricFit:
         self.ratios = []
         for element in self.log.output:
             self.ratios.append(element.errorsTotal / element.transmissionsTotal * 1000)
-        self.__draw()
+        self.__draw('pakietowa stopa bledu')
 
     def drawUndetectedToTotalErrorsRatioDistrib(self):
         self.ratios = []
         for element in self.log.output:
             self.ratios.append(element.errorsUndetected / element.errorsTotal * 1000)
-        self.__draw()
+        self.__draw('stosunek bledow niewykrytych do wszystkich bledow')
 
-    def __draw(self):
+    def __draw(self, xlabel):
         y_values = []
         x_values = []
         for index in range(0, 1000, 1):
@@ -43,7 +43,7 @@ class ParametricFit:
         plt.plot(x_values, normalDistrib(x_values, *popt), 'r-',
                  label='fit: avg=%5.3f, sigm=%5.3f, amp=%5.3f' % tuple(popt))
 
-        plt.xlabel('pakietowa stopa bledu')
+        plt.xlabel(xlabel)
         plt.ylabel('liczba wystapien na 10000 symulacji')
         plt.legend()
         plt.show()
