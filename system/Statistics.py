@@ -1,6 +1,5 @@
 import pandas as pd
 from numpy import mean
-import statistics
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from scipy.stats import norm
@@ -12,18 +11,28 @@ def normalDistrib(x, avg, s, amp):
 
 class ParametricFit:
     def __init__(self, multipleRunLog):
+        self.ratios = []
         self.log = multipleRunLog
 
-    def draw(self):
-        packetErrorRatios = []
+    def drawDamagedPacketsRatioDistrib(self):
+        self.ratios = []
         for element in self.log.output:
-            packetErrorRatios.append(element.errorsTotal / element.transmissionsTotal * 1000)
+            self.ratios.append(element.errorsTotal / element.transmissionsTotal * 1000)
+        self.__draw()
+
+    def drawUndetectedToTotalErrorsRatioDistrib(self):
+        self.ratios = []
+        for element in self.log.output:
+            self.ratios.append(element.errorsUndetected / element.errorsTotal * 1000)
+        self.__draw()
+
+    def __draw(self):
         y_values = []
         x_values = []
         for index in range(0, 1000, 1):
             x_values.append(index / 1000)
             inRange, left, right = 0, index - 25, index + 25
-            for element in packetErrorRatios:
+            for element in self.ratios:
                 inRange += (left < element) and (element < right)
             y_values.append(inRange)
 
@@ -76,9 +85,9 @@ class Avg:
         x = ["L. transmisji", "L. retransmisji", "Niewykryte błędy", "Wszystkie błędy"]
         y = [self.avgTransmissionsTotal, self.avgRetransmissions, self.avgErrorsUndetected, self.avgErrorsTotal]
         plt.figtext(0, 0, ' dlugosc sygnalu = ' + str(self.usefulData.multipleRunLog.params.totalLength) +
-                 '\n dlugosc pakietu = ' + str(self.usefulData.multipleRunLog.params.packetLength) +
-                 '\n rodzaj zaszumiania = ' + str(self.usefulData.multipleRunLog.params.noiseModel) +
-                 '\n rodzaj kodowania = ' + str(self.usefulData.multipleRunLog.params.encoding))
+                    '\n dlugosc pakietu = ' + str(self.usefulData.multipleRunLog.params.packetLength) +
+                    '\n rodzaj zaszumiania = ' + str(self.usefulData.multipleRunLog.params.noiseModel) +
+                    '\n rodzaj kodowania = ' + str(self.usefulData.multipleRunLog.params.encoding))
         plt.subplot(2, 1, 1)
         plt.bar(x, y)
         plt.title("ŚREDNIA ARYTMETYCZNA " + str(len(self.usefulData.multipleRunLog.output)) + " PRÓB")
@@ -94,9 +103,9 @@ class Histogram:
     def showGraph(self):
         plt.suptitle("Histogram")
         plt.figtext(0, 0, ' dlugosc sygnalu = ' + str(self.usefulData.multipleRunLog.params.totalLength) +
-                 '\n dlugosc pakietu = ' + str(self.usefulData.multipleRunLog.params.packetLength) +
-                 '\n rodzaj zaszumiania = ' + str(self.usefulData.multipleRunLog.params.noiseModel) +
-                 '\n rodzaj kodowania = ' + str(self.usefulData.multipleRunLog.params.encoding))
+                    '\n dlugosc pakietu = ' + str(self.usefulData.multipleRunLog.params.packetLength) +
+                    '\n rodzaj zaszumiania = ' + str(self.usefulData.multipleRunLog.params.noiseModel) +
+                    '\n rodzaj kodowania = ' + str(self.usefulData.multipleRunLog.params.encoding))
         plt.subplot(2, 2, 1)
         plt.hist(self.usefulData.transmissionsTotal)
         plt.title("L. wszystkich transmisji")
@@ -111,9 +120,9 @@ class Histogram:
         plt.title("L. wszystkich błędów")
         plt.show()
 
+
 class FiveNumberSummary:
     def __init__(self, usefulData):
-        self.usefulData = usefulData
         self.usefulData = usefulData
         self.minTransmissionsTotal = 0
         self.minRetransmissions = 0
@@ -137,10 +146,10 @@ class FiveNumberSummary:
         self.maxErrorsUndetected = 0
 
     def showBoxplot(self):
-        df = pd.DataFrame({'TransmissionsTotal' : self.usefulData.transmissionsTotal,
-                                'Retransmissions' : self.usefulData.retransmissions,
-                                'ErrorsTotal' : self.usefulData.errorsTotal,
-                                'ErrorsUndetected' : self.usefulData.errorsUndetected})
+        df = pd.DataFrame({'TransmissionsTotal': self.usefulData.transmissionsTotal,
+                           'Retransmissions': self.usefulData.retransmissions,
+                           'ErrorsTotal': self.usefulData.errorsTotal,
+                           'ErrorsUndetected': self.usefulData.errorsUndetected})
 
         self.minTransmissionsTotal = min(self.usefulData.transmissionsTotal)
         self.minRetransmissions = min(self.usefulData.retransmissions)
@@ -163,10 +172,10 @@ class FiveNumberSummary:
         self.maxErrorsTotal = max(self.usefulData.errorsTotal)
         self.maxErrorsUndetected = max(self.usefulData.errorsUndetected)
 
-
         plt.title("Wykres pudełkowy")
-        boxplot = df.boxplot(column = ['TransmissionsTotal','Retransmissions','ErrorsTotal','ErrorsUndetected'])
+        boxplot = df.boxplot(column=['TransmissionsTotal', 'Retransmissions', 'ErrorsTotal', 'ErrorsUndetected'])
         plt.show()
+
 
 # odtąd są testy działania statystyk
 class MultipleRunLogTest:

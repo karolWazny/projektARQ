@@ -128,21 +128,42 @@ class OutputAnalyzer:
 
     def fitDamagedPacketsDistribution(self):
         fitter = ParametricFit(self.output)
-        fitter.draw()
+        fitter.drawDamagedPacketsRatioDistrib()
+
+    def fitUndetectedToTotalDistribution(self):
+        fitter = ParametricFit(self.output)
+        fitter.drawUndetectedToTotalErrorsRatioDistrib()
 
     def average(self):
         avg = Avg(PrepareData(self.output))
         avg.showGraph()
+
+    def histogram(self):
+        hist = Histogram(PrepareData(self.output))
+        hist.showGraph()
+
+    def fiveNum(self):
+        summary = FiveNumberSummary(PrepareData(self.output))
+        summary.showBoxplot()
 
     def prepareWindow(self):
         window = tk.Toplevel()
         fitDmgDistrButt = tk.Button(window, text="Fit damaged packets distribution",
                                     command=self.fitDamagedPacketsDistribution)
         fitDmgDistrButt.pack()
+        fitUndetDistrButt = tk.Button(window, text="Fit undetected to total errors ratio distribution",
+                                    command=self.fitUndetectedToTotalDistribution)
+        fitUndetDistrButt.pack()
         avgButt = tk.Button(window, text="Show average values",
                             command=self.average)
         avgButt.pack()
-        window.geometry("250x120")
+        histButt = tk.Button(window, text="Show histogram",
+                             command=self.histogram)
+        histButt.pack()
+        fiveNumButt = tk.Button(window, text="Show five number summary",
+                             command=self.fiveNum)
+        fiveNumButt.pack()
+        window.geometry("260x150")
         return window
 
 
