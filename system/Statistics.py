@@ -47,8 +47,9 @@ class PrepareData:
         self.retransmissions = []
         self.errorsTotal = []
         self.errorsUndetected = []
+        self.__makeUsefulData()
 
-    def makeUsefulData(self):
+    def __makeUsefulData(self):
         for output in self.multipleRunLog.output:
             self.transmissionsTotal.append(output.transmissionsTotal)
             self.retransmissions.append(output.retransmissions)
@@ -63,6 +64,7 @@ class Avg:
         self.avgRetransmissions = 0
         self.avgErrorsTotal = 0
         self.avgErrorsUndetected = 0
+        self.calculate()
 
     def calculate(self):
         self.avgTransmissionsTotal = mean(self.usefulData.transmissionsTotal)

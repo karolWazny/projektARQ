@@ -57,6 +57,7 @@ class Main:
     def analyzeOutput(self):
         analyzer = OutputAnalyzer(self.output)
         analyzer.run()
+
     def obtainParameters(self):
         try:
             params = readParametersFromJson('params.json')
@@ -129,11 +130,18 @@ class OutputAnalyzer:
         fitter = ParametricFit(self.output)
         fitter.draw()
 
+    def average(self):
+        avg = Avg(PrepareData(self.output))
+        avg.showGraph()
 
     def prepareWindow(self):
         window = tk.Toplevel()
-        fitDmgDistrButt = tk.Button(window, text="Fit damaged packets distribution", command=self.fitDamagedPacketsDistribution)
+        fitDmgDistrButt = tk.Button(window, text="Fit damaged packets distribution",
+                                    command=self.fitDamagedPacketsDistribution)
         fitDmgDistrButt.pack()
+        avgButt = tk.Button(window, text="Show average values",
+                            command=self.average)
+        avgButt.pack()
         window.geometry("250x120")
         return window
 
