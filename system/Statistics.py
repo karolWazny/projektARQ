@@ -35,7 +35,7 @@ class ParametricFit:
                  label='fit: avg=%5.3f, sigm=%5.3f, amp=%5.3f' % tuple(popt))
 
         plt.xlabel('pakietowa stopa bledu')
-        plt.ylabel('liczba wystapien na 1000 symulacji')
+        plt.ylabel('liczba wystapien na 10000 symulacji')
         plt.legend()
         plt.show()
 

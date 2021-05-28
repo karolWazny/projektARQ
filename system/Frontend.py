@@ -46,11 +46,17 @@ class Main:
         manyButt.pack()
         fileButt = tk.Button(window, text="Choose output file", command=self.chooseFile)
         fileButt.pack()
-        window.geometry("250x120")
+        analButt = tk.Button(window, text="Analyze output", command=self.analyzeOutput)
+        analButt.pack()
+        window.geometry("250x150")
         return window
 
     def run(self):
         self.window.mainloop()
+
+    def analyzeOutput(self):
+        fitter = ParametricFit(self.output)
+        fitter.draw()
 
     def obtainParameters(self):
         try:
@@ -63,8 +69,6 @@ class Main:
     def chooseFile(self):
         filename = tkinter.filedialog.askopenfilename()
         self.output = readObjectFromJson(MultipleRunLog, filename)
-        fitter = ParametricFit(self.output)
-        fitter.draw()
 
     def makeDefaultParameters(self):
         params = SimulationParameters()
@@ -111,6 +115,29 @@ class Main:
     def generateCurrentTimeString():
         now = datetime.now()
         return now.strftime("%Y-%m-%d-%H%M%S")
+
+
+class OutputAnalyzer:
+    def __init__(self, output):
+        self.output = output
+        self.window = self.prepareWindow()
+
+    def run(self):
+        self.window.grab_set()
+        self.window.wait_window()
+
+    def prepareWindow(self):
+        window = tk.Toplevel()
+        runButt = tk.Button(window, text="Run simulation")
+        runButt.pack()
+        paramButt = tk.Button(window, text="Change Parameters")
+        paramButt.pack()
+        manyButt = tk.Button(window, text="Run in a series")
+        manyButt.pack()
+        fileButt = tk.Button(window, text="Choose output file")
+        fileButt.pack()
+        window.geometry("250x120")
+        return window
 
 
 class ParametersChanger:
