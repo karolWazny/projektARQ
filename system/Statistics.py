@@ -56,9 +56,9 @@ class PrepareData:
         self.retransmissions = []
         self.errorsTotal = []
         self.errorsUndetected = []
-        self.__makeUsefulData()
+        self.makeUsefulData()
 
-    def __makeUsefulData(self):
+    def makeUsefulData(self):
         for output in self.multipleRunLog.output:
             self.transmissionsTotal.append(output.transmissionsTotal)
             self.retransmissions.append(output.retransmissions)
@@ -92,7 +92,9 @@ class Avg:
         plt.bar(x, y)
         plt.title("ŚREDNIA ARYTMETYCZNA " + str(len(self.usefulData.multipleRunLog.output)) + " PRÓB")
         plt.subplot(2, 1, 2)
-        plt.pie(y, labels=x, startangle=90)
+        x2 = ["L. wysłanych poprawnie", "L. wszystkich błędów"]
+        y2 = [self.avgTransmissionsTotal - self.avgErrorsTotal, self.avgErrorsTotal]
+        plt.pie(y2, labels=x2, startangle=90)
         plt.show()
 
 
