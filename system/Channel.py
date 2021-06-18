@@ -5,7 +5,13 @@ from .Random import RandomizerImpl
 
 class Channel:
     def distort(self, packet):
-        return packet
+        output = Packet()
+        for bit in packet.content():
+            self.processBit(bit, output)
+        return output
+
+    def processBit(self, bit, outputPacket):
+        outputPacket.add(bit)
 
 
 class StatelessChannel(Channel):
@@ -25,6 +31,7 @@ class StatelessChannel(Channel):
         self.__distortionProbabilityInPercent = percentChance
 
 
+
 # https://en.wikipedia.org/wiki/Binary_symmetric_channel
 class BinarySymmetricChannel(StatelessChannel):
     """Kanał zaprzeczający dany bit z zadanym prawdopodobieństwem."""
@@ -33,11 +40,8 @@ class BinarySymmetricChannel(StatelessChannel):
         super().__init__(BER, randomDevice)
         self.setChancesOfDistortingSingleBit(BER)
 
-    def distort(self, packet):
-        output = Packet()
-        for bit in packet.content():
-            output.add(bit=bool(bit) ^ bool(self.isBitDistorted()))
-        return output
+    def processBit(self, bit, outputPacket):
+        outputPacket.add(bit=bool(bit) ^ bool(self.isBitDistorted()))
 
 
 # https://en.wikipedia.org/wiki/Binary_erasure_channel#Related_channels
@@ -47,12 +51,9 @@ class BinaryErasureChannel(StatelessChannel):
     def __init__(self, BER=10, randomDevice=RandomizerImpl()):
         super().__init__(BER, randomDevice)
 
-    def distort(self, packet):
-        output = Packet()
-        for bit in packet.content():
-            if not self.isBitDistorted():
-                output.add(bit)
-        return output
+    def processBit(self, bit, outputPacket):
+        if not self.isBitDistorted():
+            outputPacket.add(bit)
 
 
 # https://en.wikipedia.org/wiki/Z-channel_(information_theory)
@@ -62,14 +63,11 @@ class ZChannel(StatelessChannel):
     def __init__(self, BER=10, randomDevice=RandomizerImpl()):
         super().__init__(BER, randomDevice)
 
-    def distort(self, packet):
-        output = Packet()
-        for bit in packet.content():
-            if self.isBitDistorted():
-                output.add(False)
-            else:
-                output.add(bit)
-        return output
+    def processBit(self, bit, outputPacket):
+        if self.isBitDistorted():
+            outputPacket.add(False)
+        else:
+            outputPacket.add(bit)
 
 
 # https://core.ac.uk/download/pdf/187610741.pdf
@@ -87,13 +85,12 @@ class TwoStateMarkovChannel(Channel):
         self.randomizer = RandomizerImpl()
         self.inFirstState = True
 
-    def distort(self, packet):
+    def processBit(self, bit, outputPacket):
         if self.inFirstState:
-            output = self.firstChannel.distort(packet)
+            self.firstChannel.processBit(bit, outputPacket)
         else:
-            output = self.secondChannel.distort(packet)
+            self.secondChannel.processBit(bit, outputPacket)
         self.toggleState()
-        return output
 
     def toggleState(self):
         if self.inFirstState:
