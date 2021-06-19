@@ -3,9 +3,11 @@ from numpy import mean
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from scipy.stats import norm
+from math import pi, sqrt, exp
 
 
 def normalDistrib(x, avg, s, amp):
+    #return (1 / s * sqrt(2 * pi)) * exp(-((x - avg) ** 2)/(2 * (s ** 2))) * amp
     return norm.pdf(x, avg, s) * amp
 
 
