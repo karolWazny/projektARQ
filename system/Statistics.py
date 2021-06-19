@@ -84,7 +84,10 @@ class Avg:
         self.avgErrorsUndetected = mean(self.usefulData.errorsUndetected)
 
     def showGraph(self):
-        x = ["L. transmisji", "L. retransmisji", "Niewykryte błędy", "Wszystkie błędy"]
+        x = ["L. transmisji: " + str(round(self.avgTransmissionsTotal)),
+             "L. retransmisji " + str(round(self.avgRetransmissions)),
+             "Niewykryte błędy " + str(round(self.avgErrorsUndetected)),
+             "Wszystkie błędy " + str(round(self.avgErrorsTotal))]
         y = [self.avgTransmissionsTotal, self.avgRetransmissions, self.avgErrorsUndetected, self.avgErrorsTotal]
         plt.figtext(0, 0, ' dlugosc sygnalu = ' + str(self.usefulData.multipleRunLog.params.totalLength) +
                     '\n dlugosc pakietu = ' + str(self.usefulData.multipleRunLog.params.packetLength) +
@@ -94,7 +97,8 @@ class Avg:
         plt.bar(x, y)
         plt.title("ŚREDNIA ARYTMETYCZNA " + str(len(self.usefulData.multipleRunLog.output)) + " PRÓB")
         plt.subplot(2, 1, 2)
-        x2 = ["L. wysłanych poprawnie", "L. wszystkich błędów"]
+        x2 = ["L. wysłanych poprawnie " + str(round(self.avgTransmissionsTotal - self.avgErrorsTotal)),
+              "L. wszystkich błędów " + str(round(self.avgErrorsTotal))]
         y2 = [self.avgTransmissionsTotal - self.avgErrorsTotal, self.avgErrorsTotal]
         plt.pie(y2, labels=x2, startangle=90)
         plt.show()
