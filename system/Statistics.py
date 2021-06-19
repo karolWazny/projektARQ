@@ -31,7 +31,7 @@ class ParametricFit:
         x_values = []
         for index in range(0, 1000, 1):
             x_values.append(index / 1000)
-            inRange, left, right = 0, index - 25, index + 25
+            inRange, left, right = 0, index - 0.5, index + 0.5
             for element in self.ratios:
                 inRange += (left < element) and (element < right)
             y_values.append(inRange)
