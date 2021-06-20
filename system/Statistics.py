@@ -3,6 +3,7 @@ from numpy import mean
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from scipy.stats import norm
+import random
 
 
 def normalDistrib(x, avg, s, amp):
@@ -52,10 +53,10 @@ class ParametricFit:
 class PrepareData:
     def __init__(self, multipleRunLog):
         self.multipleRunLog = multipleRunLog
-        self.transmissionsTotal = []
-        self.retransmissions = []
-        self.errorsTotal = []
-        self.errorsUndetected = []
+        self.transmissionsTotal = list()
+        self.retransmissions = list()
+        self.errorsTotal = list()
+        self.errorsUndetected = list()
         self.makeUsefulData()
 
     def makeUsefulData(self):
@@ -66,34 +67,28 @@ class PrepareData:
             self.errorsUndetected.append(output.errorsUndetected)
 
 
-class Avg:
-    def __init__(self, usefulData):
-        self.usefulData = usefulData
-        self.avgTransmissionsTotal = 0
-        self.avgRetransmissions = 0
-        self.avgErrorsTotal = 0
-        self.avgErrorsUndetected = 0
-        self.calculate()
+class Avg(PrepareData):
+    def __init__(self, multipleRunLog):
+        super().__init__(multipleRunLog)
+        self.avgErrorsUndetected = mean(self.errorsUndetected)
+        self.avgErrorsTotal = mean(self.errorsTotal)
+        self.avgRetransmissions = mean(self.retransmissions)
+        self.avgTransmissionsTotal = mean(self.transmissionsTotal)
 
-    def calculate(self):
-        self.avgTransmissionsTotal = mean(self.usefulData.transmissionsTotal)
-        self.avgRetransmissions = mean(self.usefulData.retransmissions)
-        self.avgErrorsTotal = mean(self.usefulData.errorsTotal)
-        self.avgErrorsUndetected = mean(self.usefulData.errorsUndetected)
-
-    def showGraph(self):
+    def show(self):
+        plt.figure(figsize=(8, 5))
         x = ["L. transmisji: " + str(round(self.avgTransmissionsTotal)),
              "L. retransmisji " + str(round(self.avgRetransmissions)),
              "Niewykryte błędy " + str(round(self.avgErrorsUndetected)),
              "Wszystkie błędy " + str(round(self.avgErrorsTotal))]
         y = [self.avgTransmissionsTotal, self.avgRetransmissions, self.avgErrorsUndetected, self.avgErrorsTotal]
-        plt.figtext(0, 0, ' dlugosc sygnalu = ' + str(self.usefulData.multipleRunLog.params.totalLength) +
-                    '\n dlugosc pakietu = ' + str(self.usefulData.multipleRunLog.params.packetLength) +
-                    '\n rodzaj zaszumiania = ' + str(self.usefulData.multipleRunLog.params.noiseModel) +
-                    '\n rodzaj kodowania = ' + str(self.usefulData.multipleRunLog.params.encoding))
+        plt.figtext(0, 0, ' dlugosc sygnalu = ' + str(self.multipleRunLog.params.totalLength) +
+                    '\n dlugosc pakietu = ' + str(self.multipleRunLog.params.packetLength) +
+                    '\n rodzaj zaszumiania = ' + str(self.multipleRunLog.params.noiseModel) +
+                    '\n rodzaj kodowania = ' + str(self.multipleRunLog.params.encoding))
         plt.subplot(2, 1, 1)
         plt.bar(x, y)
-        plt.title("ŚREDNIA ARYTMETYCZNA " + str(len(self.usefulData.multipleRunLog.output)) + " PRÓB")
+        plt.title("ŚREDNIA ARYTMETYCZNA " + str(len(self.multipleRunLog.output)) + " PRÓB")
         plt.subplot(2, 1, 2)
         x2 = ["L. wysłanych poprawnie " + str(round(self.avgTransmissionsTotal - self.avgErrorsTotal)),
               "L. wszystkich błędów " + str(round(self.avgErrorsTotal))]
@@ -102,96 +97,68 @@ class Avg:
         plt.show()
 
 
-class Histogram:
-    def __init__(self, usefulData):
-        self.usefulData = usefulData
+class Histogram(PrepareData):
+    def __init__(self, multipleRunLog):
+        super().__init__(multipleRunLog)
 
-    def showGraph(self):
+    def show(self):
+        plt.figure(figsize=(10, 7.125))
         plt.suptitle("Histogram")
-        plt.figtext(0, 0, ' dlugosc sygnalu = ' + str(self.usefulData.multipleRunLog.params.totalLength) +
-                    '\n dlugosc pakietu = ' + str(self.usefulData.multipleRunLog.params.packetLength) +
-                    '\n rodzaj zaszumiania = ' + str(self.usefulData.multipleRunLog.params.noiseModel) +
-                    '\n rodzaj kodowania = ' + str(self.usefulData.multipleRunLog.params.encoding))
+        plt.figtext(0, 0, ' dlugosc sygnalu = ' + str(self.multipleRunLog.params.totalLength) +
+                    '\n dlugosc pakietu = ' + str(self.multipleRunLog.params.packetLength) +
+                    '\n rodzaj zaszumiania = ' + str(self.multipleRunLog.params.noiseModel) +
+                    '\n rodzaj kodowania = ' + str(self.multipleRunLog.params.encoding))
         plt.subplot(2, 2, 1)
-        plt.hist(self.usefulData.transmissionsTotal)
+        plt.hist(self.transmissionsTotal)
         plt.title("L. wszystkich transmisji")
         plt.subplot(2, 2, 2)
-        plt.hist(self.usefulData.retransmissions)
+        plt.hist(self.retransmissions)
         plt.title("L. wszystkich retransmisji")
         plt.subplot(2, 2, 3)
-        plt.hist(self.usefulData.errorsUndetected)
+        plt.hist(self.errorsUndetected)
         plt.title("L. niewykrytych błędów")
         plt.subplot(2, 2, 4)
-        plt.hist(self.usefulData.errorsTotal)
+        plt.hist(self.errorsTotal)
         plt.title("L. wszystkich błędów")
         plt.show()
 
 
-class FiveNumberSummary:
-    def __init__(self, usefulData):
-        self.usefulData = usefulData
-        self.minTransmissionsTotal = 0
-        self.minRetransmissions = 0
-        self.minErrorsTotal = 0
-        self.minErrorsUndetected = 0
-        self.over25TransmissionsTotal = 0
-        self.over25Retransmissions = 0
-        self.over25ErrorsTotal = 0
-        self.over25ErrorsUndetected = 0
-        self.medianTransmissionsTotal = 0
-        self.medianRetransmissions = 0
-        self.medianErrorsTotal = 0
-        self.medianErrorsUndetected = 0
-        self.over75TransmissionsTotal = 0
-        self.over75Retransmissions = 0
-        self.over75ErrorsTotal = 0
-        self.over75ErrorsUndetected = 0
-        self.maxTransmissionsTotal = 0
-        self.maxRetransmissions = 0
-        self.maxErrorsTotal = 0
-        self.maxErrorsUndetected = 0
+class FiveNumberSummary(PrepareData):
+    def __init__(self, multipleRunLog):
+        super().__init__(multipleRunLog)
 
     def showBoxplot(self):
-        df = pd.DataFrame({'TransmissionsTotal': self.usefulData.transmissionsTotal,
-                           'Retransmissions': self.usefulData.retransmissions,
-                           'ErrorsTotal': self.usefulData.errorsTotal,
-                           'ErrorsUndetected': self.usefulData.errorsUndetected})
-
-        self.minTransmissionsTotal = min(self.usefulData.transmissionsTotal)
-        self.minRetransmissions = min(self.usefulData.retransmissions)
-        self.minErrorsTotal = min(self.usefulData.errorsTotal)
-        self.minErrorsUndetected = min(self.usefulData.errorsUndetected)
-        self.over25TransmissionsTotal = df['TransmissionsTotal'].quantile([0.25])
-        self.over25Retransmissions = df['Retransmissions'].quantile([0.25])
-        self.over25ErrorsTotal = df['ErrorsTotal'].quantile([0.25])
-        self.over25ErrorsUndetected = df['ErrorsUndetected'].quantile([0.25])
-        self.medianTransmissionsTotal = df['TransmissionsTotal'].quantile([0.5])
-        self.medianRetransmissions = df['Retransmissions'].quantile([0.5])
-        self.medianErrorsTotal = df['ErrorsTotal'].quantile([0.5])
-        self.medianErrorsUndetected = df['ErrorsUndetected'].quantile([0.5])
-        self.over75TransmissionsTotal = df['TransmissionsTotal'].quantile([0.75])
-        self.over75Retransmissions = df['Retransmissions'].quantile([0.75])
-        self.over75ErrorsTotal = df['ErrorsTotal'].quantile([0.75])
-        self.over75ErrorsUndetected = df['ErrorsUndetected'].quantile([0.75])
-        self.maxTransmissionsTotal = max(self.usefulData.transmissionsTotal)
-        self.maxRetransmissions = max(self.usefulData.retransmissions)
-        self.maxErrorsTotal = max(self.usefulData.errorsTotal)
-        self.maxErrorsUndetected = max(self.usefulData.errorsUndetected)
+        df = pd.DataFrame({'TransmissionsTotal': self.transmissionsTotal,
+                           'Retransmissions': self.retransmissions,
+                           'ErrorsTotal': self.errorsTotal,
+                           'ErrorsUndetected': self.errorsUndetected})
+        df['TransmissionsTotal'].quantile([0.25])
+        df['Retransmissions'].quantile([0.25])
+        df['ErrorsTotal'].quantile([0.25])
+        df['ErrorsUndetected'].quantile([0.25])
+        df['TransmissionsTotal'].quantile([0.5])
+        df['Retransmissions'].quantile([0.5])
+        df['ErrorsTotal'].quantile([0.5])
+        df['ErrorsUndetected'].quantile([0.5])
+        df['TransmissionsTotal'].quantile([0.75])
+        df['Retransmissions'].quantile([0.75])
+        df['ErrorsTotal'].quantile([0.75])
+        df['ErrorsUndetected'].quantile([0.75])
 
         plt.title("Wykres pudełkowy")
-        boxplot = df.boxplot(column=['TransmissionsTotal', 'Retransmissions', 'ErrorsTotal', 'ErrorsUndetected'])
+        df.boxplot(column=['TransmissionsTotal', 'Retransmissions', 'ErrorsTotal', 'ErrorsUndetected'])
         plt.show()
 
 
-# odtąd są testy działania statystyk
+# odtąd są testy działania statystyk (tylko do sprawdzenia czy się wyświetlają te wartości na wykresach)
 class MultipleRunLogTest:
     def __init__(self):
-        self.output = []
+        self.output = list()
         self.params = SimulationParametersTest()
 
 
 class SimulationParametersTest:
-    def __init__(self):  # tylko do sprawdzenia czy się wyświetlają te wartości na wykresach
+    def __init__(self):
         self.totalLength = 125
         self.packetLength = 8
         self.noiseModel = "BINARY_SIMETRIC"
@@ -209,46 +176,24 @@ class SimulationOutputTest:
 class RandomOutputs:
     @staticmethod
     def generateRandomOutputs():
-        simLog = MultipleRunLogTest()
-        out1 = SimulationOutputTest()
-        out1.transmissionsTotal = 12
-        out1.retransmissions = 7
-        out1.errorsUndetected = 2
-        out1.errorsTotal = 9
-        simLog.output.append(out1)
-
-        out2 = SimulationOutputTest()
-        out2.transmissionsTotal = 80
-        out2.retransmissions = 25
-        out2.errorsUndetected = 9
-        out2.errorsTotal = 34
-        simLog.output.append(out2)
-
-        out3 = SimulationOutputTest()
-        out3.transmissionsTotal = 69
-        out3.retransmissions = 15
-        out3.errorsUndetected = 3
-        out3.errorsTotal = 18
-        simLog.output.append(out3)
-
-        out4 = SimulationOutputTest()
-        out4.transmissionsTotal = 420
-        out4.retransmissions = 123
-        out4.errorsUndetected = 34
-        out4.errorsTotal = 157
-        simLog.output.append(out4)
-
-        return simLog
+        multipleRunLogTest = MultipleRunLogTest()
+        for i in range(100):
+            simulationOutputTest = SimulationOutputTest()
+            simulationOutputTest.retransmissions = random.randint(1, 300)
+            simulationOutputTest.errorsUndetected = random.randint(1, 100)
+            simulationOutputTest.transmissionsTotal = simulationOutputTest.retransmissions + \
+                                                      simulationOutputTest.errorsUndetected + \
+                                                      random.randint(1, 500)
+            simulationOutputTest.errorsTotal = simulationOutputTest.errorsUndetected + simulationOutputTest.retransmissions
+            multipleRunLogTest.output.append(simulationOutputTest)
+        return multipleRunLogTest
 
 
 if __name__ == '__main__':
     multipleRunLog = RandomOutputs.generateRandomOutputs()
-    preparedLists = PrepareData(multipleRunLog)
-    preparedLists.makeUsefulData()
-    avg = Avg(preparedLists)
-    avg.calculate()
-    avg.showGraph()
-    hist = Histogram(preparedLists)
-    hist.showGraph()
-    boxplot = FiveNumberSummary(preparedLists)
+    avg = Avg(multipleRunLog)
+    avg.show()
+    hist = Histogram(multipleRunLog)
+    hist.show()
+    boxplot = FiveNumberSummary(multipleRunLog)
     boxplot.showBoxplot()

@@ -136,11 +136,11 @@ class OutputAnalyzer:
 
     def average(self):
         avg = Avg(PrepareData(self.output))
-        avg.showGraph()
+        avg.show()
 
     def histogram(self):
         hist = Histogram(PrepareData(self.output))
-        hist.showGraph()
+        hist.show()
 
     def fiveNum(self):
         summary = FiveNumberSummary(PrepareData(self.output))
