@@ -103,7 +103,7 @@ class CRCDecoder(Decoder):
         tmp = copy.deepcopy(self.currentFrame.content())
         decodedPacket = div(tmp, self.key)
         if sum(decodedPacket) == 0:
-            return Packet.fromList(self.currentFrame.content()[:-len(self.key)+1])
+            return Packet.fromList(self.currentFrame.content()[:-len(self.key) + 1])
         else:
             raise DecoderException
 
@@ -129,10 +129,19 @@ class HammingMatrixBuilder:
         return np.append(np.identity(self.__dataBits, dtype=int), self.aMatrix.transpose(), axis=1)
 
     def buildAMatrix(self):
-        self.aMatrix = np.full((self.__parityBits, self.__dataBits), 1)
-        if self.__dataBits > 1:
-            for rowIndex in range(self.__parityBits):
-                self.aMatrix[rowIndex][rowIndex + 1] = 0
+        columnIndex, self.aMatrix = 0, np.empty((self.__parityBits, 0), dtype=bool)
+        for index in range(3, 2 ** self.__parityBits):
+            row, count, num = np.empty((self.__parityBits, 1), dtype=bool), 0, 1
+            for j in range(0, self.__parityBits):
+                tmp = index & num
+                if tmp != 0:
+                    count += 1
+                    row[j][0] = 1
+                else:
+                    row[j][0] = 0
+                num = num << 1
+            if count > 1:
+                self.aMatrix = np.append(self.aMatrix, row, axis=1)
 
     def getDataBits(self):
         return self.__dataBits
