@@ -135,15 +135,15 @@ class OutputAnalyzer:
         fitter.drawUndetectedToTotalErrorsRatioDistrib()
 
     def average(self):
-        avg = Avg(PrepareData(self.output))
+        avg = Avg(self.output)
         avg.show()
 
     def histogram(self):
-        hist = Histogram(PrepareData(self.output))
+        hist = Histogram(self.output)
         hist.show()
 
     def fiveNum(self):
-        summary = FiveNumberSummary(PrepareData(self.output))
+        summary = FiveNumberSummary(self.output)
         summary.showBoxplot()
 
     def prepareWindow(self):
